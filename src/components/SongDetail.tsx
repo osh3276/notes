@@ -35,6 +35,7 @@ interface Song {
 	album?: string;
 	releaseDate?: string;
 	duration?: string;
+	spotifyUrl?: string;
 }
 
 interface Review {
@@ -122,9 +123,11 @@ export function SongDetail({
 				{
 					id: 1,
 					userName: "Anthony Fantano",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This track represents a significant evolution in the artist's sound palette. The production choices here are incredibly deliberate - every layer serves a purpose in building the song's emotional architecture.",
+					reviewText:
+						"This track represents a significant evolution in the artist's sound palette. The production choices here are incredibly deliberate - every layer serves a purpose in building the song's emotional architecture.",
 					timeAgo: "1 day ago",
 					likes: 234,
 					isLiked: false,
@@ -134,9 +137,11 @@ export function SongDetail({
 				{
 					id: 2,
 					userName: "Pitchfork Staff",
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "A compelling entry that showcases technical proficiency without sacrificing emotional resonance. The artist demonstrates an understanding of contemporary production trends while maintaining their distinctive voice.",
+					reviewText:
+						"A compelling entry that showcases technical proficiency without sacrificing emotional resonance. The artist demonstrates an understanding of contemporary production trends while maintaining their distinctive voice.",
 					timeAgo: "2 days ago",
 					likes: 189,
 					isLiked: true,
@@ -146,9 +151,11 @@ export function SongDetail({
 				{
 					id: 3,
 					userName: "Rolling Stone",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This is the kind of track that reminds you why you fell in love with music in the first place. The songwriting is impeccable - every verse builds naturally into a chorus.",
+					reviewText:
+						"This is the kind of track that reminds you why you fell in love with music in the first place. The songwriting is impeccable - every verse builds naturally into a chorus.",
 					timeAgo: "3 days ago",
 					likes: 312,
 					isLiked: false,
@@ -158,9 +165,11 @@ export function SongDetail({
 				{
 					id: 4,
 					userName: "AllMusic Guide",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "This represents a quantum leap in artistic maturity. The compositional approach demonstrates deep understanding of both traditional songcraft and modern production techniques.",
+					reviewText:
+						"This represents a quantum leap in artistic maturity. The compositional approach demonstrates deep understanding of both traditional songcraft and modern production techniques.",
 					timeAgo: "4 days ago",
 					likes: 167,
 					isLiked: false,
@@ -168,14 +177,16 @@ export function SongDetail({
 					publication: "AllMusic",
 				},
 			],
-			// Song 2: 2 reviews  
+			// Song 2: 2 reviews
 			2: [
 				{
 					id: 21,
 					userName: "NME Magazine",
-					userAvatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "A bold experimental venture that showcases the artist's willingness to push boundaries. The unconventional song structure keeps listeners engaged throughout, though some transitions feel abrupt.",
+					reviewText:
+						"A bold experimental venture that showcases the artist's willingness to push boundaries. The unconventional song structure keeps listeners engaged throughout, though some transitions feel abrupt.",
 					timeAgo: "12 hours ago",
 					likes: 156,
 					isLiked: false,
@@ -185,9 +196,11 @@ export function SongDetail({
 				{
 					id: 22,
 					userName: "The Guardian",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "An intriguing departure that reveals new facets of the artist's creative identity. The risk-taking pays off more often than not, resulting in moments of genuine surprise.",
+					reviewText:
+						"An intriguing departure that reveals new facets of the artist's creative identity. The risk-taking pays off more often than not, resulting in moments of genuine surprise.",
 					timeAgo: "3 days ago",
 					likes: 203,
 					isLiked: false,
@@ -200,9 +213,11 @@ export function SongDetail({
 				{
 					id: 31,
 					userName: "Consequence of Sound",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "A masterclass in contemporary songwriting. Every element - from the intricate harmonies to the dynamic percussion - works in perfect harmony to create something truly special.",
+					reviewText:
+						"A masterclass in contemporary songwriting. Every element - from the intricate harmonies to the dynamic percussion - works in perfect harmony to create something truly special.",
 					timeAgo: "6 hours ago",
 					likes: 278,
 					isLiked: true,
@@ -212,9 +227,11 @@ export function SongDetail({
 				{
 					id: 32,
 					userName: "Music Radar",
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "The production quality here is absolutely pristine. The artist has clearly evolved their sound, incorporating influences from multiple genres while maintaining their unique voice.",
+					reviewText:
+						"The production quality here is absolutely pristine. The artist has clearly evolved their sound, incorporating influences from multiple genres while maintaining their unique voice.",
 					timeAgo: "18 hours ago",
 					likes: 145,
 					isLiked: false,
@@ -224,9 +241,11 @@ export function SongDetail({
 				{
 					id: 33,
 					userName: "AllMusic Guide",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This represents a quantum leap in artistic maturity. Each section flows naturally into the next, creating a cohesive listening experience.",
+					reviewText:
+						"This represents a quantum leap in artistic maturity. Each section flows naturally into the next, creating a cohesive listening experience.",
 					timeAgo: "1 day ago",
 					likes: 298,
 					isLiked: false,
@@ -235,10 +254,12 @@ export function SongDetail({
 				},
 				{
 					id: 34,
-					userName: "Pitchfork Staff", 
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userName: "Pitchfork Staff",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "An ambitious work that largely succeeds in its scope. The sonic textures are rich and the emotional depth is genuine.",
+					reviewText:
+						"An ambitious work that largely succeeds in its scope. The sonic textures are rich and the emotional depth is genuine.",
 					timeAgo: "2 days ago",
 					likes: 187,
 					isLiked: true,
@@ -248,9 +269,11 @@ export function SongDetail({
 				{
 					id: 35,
 					userName: "Rolling Stone",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "A stunning achievement that showcases the full range of the artist's capabilities. This will be remembered as a defining moment.",
+					reviewText:
+						"A stunning achievement that showcases the full range of the artist's capabilities. This will be remembered as a defining moment.",
 					timeAgo: "3 days ago",
 					likes: 356,
 					isLiked: false,
@@ -263,9 +286,11 @@ export function SongDetail({
 				{
 					id: 41,
 					userName: "Spin Magazine",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 3,
-					reviewText: "An interesting experiment that doesn't quite hit the mark. The concept is solid but the execution feels rushed. With more development, this could have been something special.",
+					reviewText:
+						"An interesting experiment that doesn't quite hit the mark. The concept is solid but the execution feels rushed. With more development, this could have been something special.",
 					timeAgo: "2 hours ago",
 					likes: 67,
 					isLiked: false,
@@ -275,9 +300,11 @@ export function SongDetail({
 				{
 					id: 42,
 					userName: "Billboard Review",
-					userAvatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "A commercially savvy track that doesn't sacrifice artistic integrity. The hook is undeniably catchy while the deeper cuts reveal layers of complexity for attentive listeners.",
+					reviewText:
+						"A commercially savvy track that doesn't sacrifice artistic integrity. The hook is undeniably catchy while the deeper cuts reveal layers of complexity for attentive listeners.",
 					timeAgo: "1 day ago",
 					likes: 198,
 					isLiked: true,
@@ -287,9 +314,11 @@ export function SongDetail({
 				{
 					id: 43,
 					userName: "Stereogum",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This track captures lightning in a bottle. The emotional authenticity combined with flawless technical execution creates a listening experience that feels both intimate and universal.",
+					reviewText:
+						"This track captures lightning in a bottle. The emotional authenticity combined with flawless technical execution creates a listening experience that feels both intimate and universal.",
 					timeAgo: "2 days ago",
 					likes: 312,
 					isLiked: false,
@@ -302,9 +331,11 @@ export function SongDetail({
 				{
 					id: 51,
 					userName: "Complex Music",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "A genre-defying piece that showcases remarkable artistic growth. The fusion of styles feels organic rather than forced, creating something genuinely innovative.",
+					reviewText:
+						"A genre-defying piece that showcases remarkable artistic growth. The fusion of styles feels organic rather than forced, creating something genuinely innovative.",
 					timeAgo: "4 hours ago",
 					likes: 167,
 					isLiked: true,
@@ -314,9 +345,11 @@ export function SongDetail({
 				{
 					id: 52,
 					userName: "Paste Magazine",
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 3,
-					reviewText: "While the ambition is admirable, the track feels somewhat overproduced. The raw emotion that made earlier releases so compelling gets lost in the polish.",
+					reviewText:
+						"While the ambition is admirable, the track feels somewhat overproduced. The raw emotion that made earlier releases so compelling gets lost in the polish.",
 					timeAgo: "8 hours ago",
 					likes: 94,
 					isLiked: false,
@@ -329,9 +362,11 @@ export function SongDetail({
 				{
 					id: 61,
 					userName: "Exclaim! Magazine",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "Absolutely stunning. This is the sound of an artist hitting their creative stride. Every decision feels purposeful and the result is nothing short of mesmerizing.",
+					reviewText:
+						"Absolutely stunning. This is the sound of an artist hitting their creative stride. Every decision feels purposeful and the result is nothing short of mesmerizing.",
 					timeAgo: "30 minutes ago",
 					likes: 289,
 					isLiked: false,
@@ -341,9 +376,11 @@ export function SongDetail({
 				{
 					id: 62,
 					userName: "Under the Radar",
-					userAvatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "A beautifully crafted piece that balances accessibility with artistic depth. The songwriting demonstrates remarkable maturity and emotional intelligence.",
+					reviewText:
+						"A beautifully crafted piece that balances accessibility with artistic depth. The songwriting demonstrates remarkable maturity and emotional intelligence.",
 					timeAgo: "5 hours ago",
 					likes: 134,
 					isLiked: true,
@@ -353,9 +390,11 @@ export function SongDetail({
 				{
 					id: 63,
 					userName: "Drowned in Sound",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "The attention to sonic detail here is remarkable. Each layer of the arrangement has been carefully considered, resulting in a rich, immersive listening experience.",
+					reviewText:
+						"The attention to sonic detail here is remarkable. Each layer of the arrangement has been carefully considered, resulting in a rich, immersive listening experience.",
 					timeAgo: "12 hours ago",
 					likes: 176,
 					isLiked: false,
@@ -365,9 +404,11 @@ export function SongDetail({
 				{
 					id: 64,
 					userName: "The Quietus",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "A transcendent piece of work that operates on multiple levels simultaneously. The creative vision here is both bold and deeply personal.",
+					reviewText:
+						"A transcendent piece of work that operates on multiple levels simultaneously. The creative vision here is both bold and deeply personal.",
 					timeAgo: "1 day ago",
 					likes: 203,
 					isLiked: true,
@@ -380,9 +421,11 @@ export function SongDetail({
 				{
 					id: 71,
 					userName: "The Fader",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "A career-defining moment. This track represents everything great about contemporary music - innovative production, emotionally resonant lyrics, and fearless creative vision.",
+					reviewText:
+						"A career-defining moment. This track represents everything great about contemporary music - innovative production, emotionally resonant lyrics, and fearless creative vision.",
 					timeAgo: "1 hour ago",
 					likes: 356,
 					isLiked: true,
@@ -392,9 +435,11 @@ export function SongDetail({
 				{
 					id: 72,
 					userName: "Resident Advisor",
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "The electronic elements are seamlessly integrated, creating textures that feel both futuristic and timeless. A sophisticated approach to genre blending.",
+					reviewText:
+						"The electronic elements are seamlessly integrated, creating textures that feel both futuristic and timeless. A sophisticated approach to genre blending.",
 					timeAgo: "3 hours ago",
 					likes: 187,
 					isLiked: false,
@@ -404,9 +449,11 @@ export function SongDetail({
 				{
 					id: 73,
 					userName: "Mojo Magazine",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "A powerful statement that showcases the artist's evolution. The production is crisp and the emotional weight is undeniable.",
+					reviewText:
+						"A powerful statement that showcases the artist's evolution. The production is crisp and the emotional weight is undeniable.",
 					timeAgo: "6 hours ago",
 					likes: 234,
 					isLiked: false,
@@ -429,9 +476,11 @@ export function SongDetail({
 				{
 					id: 104,
 					userName: "MusicLover92",
-					userAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This track absolutely blew me away! The production quality is incredible and the emotional depth in the lyrics really resonates. Been on repeat for days now!",
+					reviewText:
+						"This track absolutely blew me away! The production quality is incredible and the emotional depth in the lyrics really resonates. Been on repeat for days now!",
 					timeAgo: "2 hours ago",
 					likes: 127,
 					isLiked: false,
@@ -441,9 +490,11 @@ export function SongDetail({
 				{
 					id: 105,
 					userName: "VinylCollector",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "Great track with solid production values. The retro influences are clear but it doesn't feel derivative - the artist has put their own spin on classic sounds.",
+					reviewText:
+						"Great track with solid production values. The retro influences are clear but it doesn't feel derivative - the artist has put their own spin on classic sounds.",
 					timeAgo: "5 hours ago",
 					likes: 89,
 					isLiked: true,
@@ -454,7 +505,8 @@ export function SongDetail({
 					id: 106,
 					userName: "AudioFan23",
 					rating: 5,
-					reviewText: "Incredible song! The production is clean and the melody is so catchy. Can't stop listening to it.",
+					reviewText:
+						"Incredible song! The production is clean and the melody is so catchy. Can't stop listening to it.",
 					timeAgo: "1 day ago",
 					likes: 34,
 					isLiked: false,
@@ -465,7 +517,8 @@ export function SongDetail({
 					id: 107,
 					userName: "GenreExplorer",
 					rating: 4,
-					reviewText: "Really solid track with great genre fusion. Love how they blend different styles seamlessly.",
+					reviewText:
+						"Really solid track with great genre fusion. Love how they blend different styles seamlessly.",
 					timeAgo: "2 days ago",
 					likes: 18,
 					isLiked: false,
@@ -475,9 +528,11 @@ export function SongDetail({
 				{
 					id: 108,
 					userName: "MelodyMaven",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "The melody in this song is absolutely infectious! It's been stuck in my head for days and I'm not complaining. This is the kind of song that will still sound fresh years from now.",
+					reviewText:
+						"The melody in this song is absolutely infectious! It's been stuck in my head for days and I'm not complaining. This is the kind of song that will still sound fresh years from now.",
 					timeAgo: "3 days ago",
 					likes: 156,
 					isLiked: true,
@@ -487,9 +542,11 @@ export function SongDetail({
 				{
 					id: 109,
 					userName: "ConcertGoer",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "Can't wait to hear this live! The energy would be incredible in a concert setting. Hope they tour soon!",
+					reviewText:
+						"Can't wait to hear this live! The energy would be incredible in a concert setting. Hope they tour soon!",
 					timeAgo: "4 days ago",
 					likes: 67,
 					isLiked: false,
@@ -502,9 +559,11 @@ export function SongDetail({
 				{
 					id: 204,
 					userName: "BeatHunter",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 3,
-					reviewText: "Interesting direction but not sure it works for me. The experimental approach is cool but feels a bit disconnected from their usual style.",
+					reviewText:
+						"Interesting direction but not sure it works for me. The experimental approach is cool but feels a bit disconnected from their usual style.",
 					timeAgo: "1 hour ago",
 					likes: 23,
 					isLiked: false,
@@ -514,9 +573,11 @@ export function SongDetail({
 				{
 					id: 205,
 					userName: "SoundScape99",
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "Love the bold choices here! Not every experiment works but when it does, it's brilliant. The middle section is absolutely gorgeous.",
+					reviewText:
+						"Love the bold choices here! Not every experiment works but when it does, it's brilliant. The middle section is absolutely gorgeous.",
 					timeAgo: "3 hours ago",
 					likes: 67,
 					isLiked: true,
@@ -527,7 +588,8 @@ export function SongDetail({
 					id: 206,
 					userName: "PlaylistCurator",
 					rating: 4,
-					reviewText: "Really unique sound. Definitely adding this to my 'Artists to Watch' playlist. Excited to see where they go next!",
+					reviewText:
+						"Really unique sound. Definitely adding this to my 'Artists to Watch' playlist. Excited to see where they go next!",
 					timeAgo: "8 hours ago",
 					likes: 41,
 					isLiked: false,
@@ -537,9 +599,11 @@ export function SongDetail({
 				{
 					id: 207,
 					userName: "MusicTheoryNerd",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "The harmonic progressions in this are fascinating! Love how they use unconventional chord changes to create tension. Really sophisticated songwriting.",
+					reviewText:
+						"The harmonic progressions in this are fascinating! Love how they use unconventional chord changes to create tension. Really sophisticated songwriting.",
 					timeAgo: "12 hours ago",
 					likes: 92,
 					isLiked: true,
@@ -552,9 +616,11 @@ export function SongDetail({
 				{
 					id: 304,
 					userName: "VocalCoach_Sarah",
-					userAvatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "The vocal performance here is absolutely stunning! The range, the control, the emotion - everything is perfectly executed. This is a masterclass in singing.",
+					reviewText:
+						"The vocal performance here is absolutely stunning! The range, the control, the emotion - everything is perfectly executed. This is a masterclass in singing.",
 					timeAgo: "45 minutes ago",
 					likes: 143,
 					isLiked: true,
@@ -564,9 +630,11 @@ export function SongDetail({
 				{
 					id: 305,
 					userName: "StudioEngineer",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "From a technical standpoint, this is flawless. The mix is perfect, every element sits exactly where it should. You can tell this was crafted by professionals.",
+					reviewText:
+						"From a technical standpoint, this is flawless. The mix is perfect, every element sits exactly where it should. You can tell this was crafted by professionals.",
 					timeAgo: "2 hours ago",
 					likes: 198,
 					isLiked: false,
@@ -577,7 +645,8 @@ export function SongDetail({
 					id: 306,
 					userName: "EverydayListener",
 					rating: 4,
-					reviewText: "Really beautiful song. Makes me feel something, you know? That's all I need from music.",
+					reviewText:
+						"Really beautiful song. Makes me feel something, you know? That's all I need from music.",
 					timeAgo: "6 hours ago",
 					likes: 76,
 					isLiked: true,
@@ -588,7 +657,8 @@ export function SongDetail({
 					id: 307,
 					userName: "ConcertGoer2024",
 					rating: 5,
-					reviewText: "Can't wait to hear this live! The energy in this track is incredible. This artist needs to tour ASAP.",
+					reviewText:
+						"Can't wait to hear this live! The energy in this track is incredible. This artist needs to tour ASAP.",
 					timeAgo: "10 hours ago",
 					likes: 89,
 					isLiked: false,
@@ -598,9 +668,11 @@ export function SongDetail({
 				{
 					id: 308,
 					userName: "SongwriterLife",
-					userAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "As a songwriter myself, I'm in awe of the craft here. Every line feels intentional, every chord change serves the story. This is how it's done.",
+					reviewText:
+						"As a songwriter myself, I'm in awe of the craft here. Every line feels intentional, every chord change serves the story. This is how it's done.",
 					timeAgo: "1 day ago",
 					likes: 167,
 					isLiked: true,
@@ -610,9 +682,11 @@ export function SongDetail({
 				{
 					id: 309,
 					userName: "IndieBlogger",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "This is going straight to the top of my year-end list. Absolutely phenomenal work that deserves all the recognition it's getting.",
+					reviewText:
+						"This is going straight to the top of my year-end list. Absolutely phenomenal work that deserves all the recognition it's getting.",
 					timeAgo: "1 day ago",
 					likes: 112,
 					isLiked: false,
@@ -623,7 +697,8 @@ export function SongDetail({
 					id: 310,
 					userName: "MoodPlaylist",
 					rating: 5,
-					reviewText: "Perfect for late night drives or rainy afternoons. This song has everything - emotion, technical skill, and pure artistry.",
+					reviewText:
+						"Perfect for late night drives or rainy afternoons. This song has everything - emotion, technical skill, and pure artistry.",
 					timeAgo: "2 days ago",
 					likes: 143,
 					isLiked: true,
@@ -633,9 +708,11 @@ export function SongDetail({
 				{
 					id: 311,
 					userName: "AudiogeekReviews",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "Testing this on my reference monitors and it sounds incredible. The stereo imaging and depth are remarkable. True audiophile quality.",
+					reviewText:
+						"Testing this on my reference monitors and it sounds incredible. The stereo imaging and depth are remarkable. True audiophile quality.",
 					timeAgo: "3 days ago",
 					likes: 87,
 					isLiked: false,
@@ -648,9 +725,11 @@ export function SongDetail({
 				{
 					id: 404,
 					userName: "RadioDJ_Mike",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "This has serious radio potential. Catchy hook, great production, and just the right length. I'll be spinning this on my show for sure.",
+					reviewText:
+						"This has serious radio potential. Catchy hook, great production, and just the right length. I'll be spinning this on my show for sure.",
 					timeAgo: "3 hours ago",
 					likes: 112,
 					isLiked: false,
@@ -660,9 +739,11 @@ export function SongDetail({
 				{
 					id: 405,
 					userName: "DanceFloorKing",
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 3,
-					reviewText: "Good song but not really danceable. More of a listening track. Still enjoyable though!",
+					reviewText:
+						"Good song but not really danceable. More of a listening track. Still enjoyable though!",
 					timeAgo: "5 hours ago",
 					likes: 34,
 					isLiked: true,
@@ -673,7 +754,8 @@ export function SongDetail({
 					id: 406,
 					userName: "VibeChecker",
 					rating: 4,
-					reviewText: "The vibe is immaculate. Perfect for those late night drives or chill study sessions. Really hits different.",
+					reviewText:
+						"The vibe is immaculate. Perfect for those late night drives or chill study sessions. Really hits different.",
 					timeAgo: "8 hours ago",
 					likes: 67,
 					isLiked: false,
@@ -683,9 +765,11 @@ export function SongDetail({
 				{
 					id: 407,
 					userName: "MusicMom",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "My teenage daughter played this for me and I actually love it! Clean lyrics, great message, beautiful melody. Rare to find music that bridges generations like this.",
+					reviewText:
+						"My teenage daughter played this for me and I actually love it! Clean lyrics, great message, beautiful melody. Rare to find music that bridges generations like this.",
 					timeAgo: "12 hours ago",
 					likes: 203,
 					isLiked: true,
@@ -696,7 +780,8 @@ export function SongDetail({
 					id: 408,
 					userName: "BasslineAppreciator",
 					rating: 4,
-					reviewText: "That bassline is absolutely groovy! Really holds the whole song together. Whoever played bass on this knows what they're doing.",
+					reviewText:
+						"That bassline is absolutely groovy! Really holds the whole song together. Whoever played bass on this knows what they're doing.",
 					timeAgo: "1 day ago",
 					likes: 85,
 					isLiked: false,
@@ -709,9 +794,11 @@ export function SongDetail({
 				{
 					id: 504,
 					userName: "ArtisticSoul",
-					userAvatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This song is pure art. The way it builds emotions and then releases them is like watching a master painter at work. Absolutely brilliant composition.",
+					reviewText:
+						"This song is pure art. The way it builds emotions and then releases them is like watching a master painter at work. Absolutely brilliant composition.",
 					timeAgo: "1 hour ago",
 					likes: 189,
 					isLiked: true,
@@ -721,9 +808,11 @@ export function SongDetail({
 				{
 					id: 505,
 					userName: "GenZMusicFan",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "Okay this is actually fire 🔥 Not usually my genre but this hits different. Already shared it on my socials.",
+					reviewText:
+						"Okay this is actually fire 🔥 Not usually my genre but this hits different. Already shared it on my socials.",
 					timeAgo: "4 hours ago",
 					likes: 124,
 					isLiked: false,
@@ -734,7 +823,8 @@ export function SongDetail({
 					id: 506,
 					userName: "RetroVibes80s",
 					rating: 3,
-					reviewText: "Has some nice nostalgic elements but feels a bit overproduced for my taste. Still decent though.",
+					reviewText:
+						"Has some nice nostalgic elements but feels a bit overproduced for my taste. Still decent though.",
 					timeAgo: "7 hours ago",
 					likes: 45,
 					isLiked: false,
@@ -744,9 +834,11 @@ export function SongDetail({
 				{
 					id: 507,
 					userName: "LiveMusicLover",
-					userAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "I can already imagine how amazing this would sound at a live show. The dynamics and energy would translate so well to a concert setting. Hope they tour soon!",
+					reviewText:
+						"I can already imagine how amazing this would sound at a live show. The dynamics and energy would translate so well to a concert setting. Hope they tour soon!",
 					timeAgo: "10 hours ago",
 					likes: 156,
 					isLiked: true,
@@ -757,7 +849,8 @@ export function SongDetail({
 					id: 508,
 					userName: "CriticalEar",
 					rating: 4,
-					reviewText: "Solid songwriting with great attention to detail. A few minor production choices I'd question, but overall this is quality music.",
+					reviewText:
+						"Solid songwriting with great attention to detail. A few minor production choices I'd question, but overall this is quality music.",
 					timeAgo: "1 day ago",
 					likes: 78,
 					isLiked: false,
@@ -767,9 +860,11 @@ export function SongDetail({
 				{
 					id: 509,
 					userName: "MusicalJourney",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 4,
-					reviewText: "This track takes you on a real journey. Love the progression and how it evolves throughout. Great storytelling through music.",
+					reviewText:
+						"This track takes you on a real journey. Love the progression and how it evolves throughout. Great storytelling through music.",
 					timeAgo: "2 days ago",
 					likes: 94,
 					isLiked: true,
@@ -780,7 +875,8 @@ export function SongDetail({
 					id: 510,
 					userName: "HomestudioProducer",
 					rating: 5,
-					reviewText: "As someone who produces from home, I'm impressed by the production quality. Really shows what's possible with the right skills and creativity.",
+					reviewText:
+						"As someone who produces from home, I'm impressed by the production quality. Really shows what's possible with the right skills and creativity.",
 					timeAgo: "3 days ago",
 					likes: 67,
 					isLiked: false,
@@ -793,9 +889,11 @@ export function SongDetail({
 				{
 					id: 604,
 					userName: "EmotionalConnection",
-					userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This song came into my life at exactly the right moment. The lyrics speak directly to my soul. Thank you for creating something so beautiful and meaningful.",
+					reviewText:
+						"This song came into my life at exactly the right moment. The lyrics speak directly to my soul. Thank you for creating something so beautiful and meaningful.",
 					timeAgo: "30 minutes ago",
 					likes: 234,
 					isLiked: true,
@@ -805,9 +903,11 @@ export function SongDetail({
 				{
 					id: 605,
 					userName: "ProducerInTraining",
-					userAvatar: "https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "Studying this track for my production class. The layering is incredible - so much depth but nothing feels cluttered. This is textbook quality.",
+					reviewText:
+						"Studying this track for my production class. The layering is incredible - so much depth but nothing feels cluttered. This is textbook quality.",
 					timeAgo: "2 hours ago",
 					likes: 178,
 					isLiked: false,
@@ -818,7 +918,8 @@ export function SongDetail({
 					id: 606,
 					userName: "WorkoutPlaylist",
 					rating: 4,
-					reviewText: "Great energy for my morning runs! The build-up sections really motivate me to push harder. Perfect tempo too.",
+					reviewText:
+						"Great energy for my morning runs! The build-up sections really motivate me to push harder. Perfect tempo too.",
 					timeAgo: "5 hours ago",
 					likes: 92,
 					isLiked: true,
@@ -828,9 +929,11 @@ export function SongDetail({
 				{
 					id: 607,
 					userName: "LyricsAnalyst",
-					userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "The wordplay and metaphors in this are next level. Every line has multiple layers of meaning. Poetry in motion.",
+					reviewText:
+						"The wordplay and metaphors in this are next level. Every line has multiple layers of meaning. Poetry in motion.",
 					timeAgo: "8 hours ago",
 					likes: 145,
 					isLiked: false,
@@ -841,7 +944,8 @@ export function SongDetail({
 					id: 608,
 					userName: "FirstTimeListen",
 					rating: 4,
-					reviewText: "Never heard of this artist before but wow! Instant fan. Going to check out their whole catalog now.",
+					reviewText:
+						"Never heard of this artist before but wow! Instant fan. Going to check out their whole catalog now.",
 					timeAgo: "12 hours ago",
 					likes: 67,
 					isLiked: false,
@@ -854,9 +958,11 @@ export function SongDetail({
 				{
 					id: 704,
 					userName: "MagicalMoments",
-					userAvatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "This song gives me goosebumps every single time. There's something magical about it that I can't quite put into words. Absolutely transcendent.",
+					reviewText:
+						"This song gives me goosebumps every single time. There's something magical about it that I can't quite put into words. Absolutely transcendent.",
 					timeAgo: "20 minutes ago",
 					likes: 267,
 					isLiked: true,
@@ -866,9 +972,11 @@ export function SongDetail({
 				{
 					id: 705,
 					userName: "MidnightListener",
-					userAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "Perfect for late night contemplation. This song takes me on a journey every time I hear it. The atmosphere is incredibly immersive.",
+					reviewText:
+						"Perfect for late night contemplation. This song takes me on a journey every time I hear it. The atmosphere is incredibly immersive.",
 					timeAgo: "1 hour ago",
 					likes: 198,
 					isLiked: false,
@@ -879,7 +987,8 @@ export function SongDetail({
 					id: 706,
 					userName: "GenerationDefining",
 					rating: 5,
-					reviewText: "This is the song that will define this era of music. Mark my words - people will be talking about this track for years to come.",
+					reviewText:
+						"This is the song that will define this era of music. Mark my words - people will be talking about this track for years to come.",
 					timeAgo: "3 hours ago",
 					likes: 312,
 					isLiked: true,
@@ -889,9 +998,11 @@ export function SongDetail({
 				{
 					id: 707,
 					userName: "AudioPhileReviews",
-					userAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
+					userAvatar:
+						"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face",
 					rating: 5,
-					reviewText: "Testing this on my high-end audio setup and it's absolutely stunning. The spatial positioning, the frequency response - everything is perfect.",
+					reviewText:
+						"Testing this on my high-end audio setup and it's absolutely stunning. The spatial positioning, the frequency response - everything is perfect.",
 					timeAgo: "6 hours ago",
 					likes: 156,
 					isLiked: false,
@@ -1021,9 +1132,19 @@ export function SongDetail({
 							/>
 							<div
 								className="absolute inset-0 bg-background/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
-								onClick={handlePlayToggle}
+								onClick={() => {
+									if (song.spotifyUrl) {
+										window.open(song.spotifyUrl, "_blank");
+									}
+								}}
 							>
-								<PlayCircle className="w-16 h-16 text-accent/80" />
+								<svg
+									className="w-16 h-16 text-accent/80"
+									fill="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z" />
+								</svg>
 							</div>
 						</div>
 					</div>
