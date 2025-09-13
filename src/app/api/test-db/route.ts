@@ -15,6 +15,16 @@ export async function GET() {
 		// Test basic connection
 		const client = await pool.connect();
 
+		// First, see what tables actually exist
+		const existingTablesQuery = `
+      SELECT table_schema, table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+      ORDER BY table_name;
+    `;
+
+		const existingTablesResult = await client.query(existingTablesQuery);
+
 		// Check if NextAuth tables exist in all schemas
 		const allTablesQuery = `
       SELECT table_schema, table_name
@@ -53,6 +63,7 @@ export async function GET() {
 			message: "Database connection successful",
 			currentSchema,
 			searchPath,
+			existingTables: existingTablesResult.rows,
 			allTablesFound: allTablesResult.rows,
 			sessionCount,
 			databaseUrl: process.env.DATABASE_URL?.substring(0, 30) + "...",
