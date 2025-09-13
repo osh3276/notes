@@ -906,6 +906,179 @@ export function SongDetail({
 
 	const communityReviews = getCommunityReviews(song.id);
 
+	// Function to generate AI summary based on song ID
+	const getAISummary = (songId: number) => {
+		const aiSummaryDatabase: Record<number, {
+			sentiment: string;
+			description: string;
+			themes: Array<{
+				title: string;
+				description: string;
+				color: string;
+			}>;
+			avgRating: string;
+		}> = {
+			1: {
+				sentiment: "Highly Positive",
+				description: "Critics and fans are unanimous in their praise for this track. The consensus highlights exceptional production quality, emotional depth, and sophisticated songwriting. Both professional reviewers and the community emphasize the artist's growth and technical mastery, with particular acclaim for the dynamic arrangement and memorable melodic hooks.",
+				themes: [
+					{
+						title: "Production Quality",
+						description: "Consistently praised for pristine mixing, clear instrumentation, and dynamic range preservation.",
+						color: "accent"
+					},
+					{
+						title: "Emotional Impact",
+						description: "Noted for its ability to create genuine emotional resonance and memorable musical moments.",
+						color: "pink"
+					},
+					{
+						title: "Artistic Growth",
+						description: "Critics highlight significant evolution in the artist's sound and songwriting maturity.",
+						color: "blue"
+					}
+				],
+				avgRating: "4.6/5"
+			},
+			2: {
+				sentiment: "Cautiously Optimistic",
+				description: "Reviews reveal a divided but intrigued response to this experimental venture. Critics appreciate the bold creative choices and willingness to push boundaries, though some question the execution. The community shows enthusiasm for the artist's risk-taking approach, with particular praise for the unconventional harmonic progressions and innovative production techniques.",
+				themes: [
+					{
+						title: "Experimental Approach",
+						description: "Praised for bold creative choices and willingness to explore uncharted territory.",
+						color: "accent"
+					},
+					{
+						title: "Technical Innovation",
+						description: "Sophisticated harmonic progressions and unconventional song structure create intrigue.",
+						color: "purple"
+					},
+					{
+						title: "Polarizing Reception",
+						description: "Divides listeners between those who embrace the experimentation and those preferring familiarity.",
+						color: "orange"
+					}
+				],
+				avgRating: "3.8/5"
+			},
+			3: {
+				sentiment: "Critically Acclaimed",
+				description: "This track has achieved widespread critical acclaim and passionate fan devotion. Reviews consistently highlight the flawless vocal performance, pristine technical execution, and masterful songwriting. The overwhelming consensus positions this as a career-defining moment, with both critics and community members praising its emotional authenticity and professional craftsmanship.",
+				themes: [
+					{
+						title: "Vocal Excellence",
+						description: "Universally praised for exceptional vocal range, control, and emotional delivery.",
+						color: "accent"
+					},
+					{
+						title: "Technical Mastery",
+						description: "Flawless mixing, perfect instrumentation placement, and audiophile-quality production.",
+						color: "green"
+					},
+					{
+						title: "Career Milestone",
+						description: "Widely regarded as a defining moment showcasing the artist's full potential.",
+						color: "gold"
+					}
+				],
+				avgRating: "4.8/5"
+			},
+			4: {
+				sentiment: "Commercially Promising",
+				description: "Critics and listeners recognize strong commercial potential while appreciating artistic integrity. Reviews emphasize the track's radio-friendly appeal, cross-generational accessibility, and polished production. The consensus suggests effective balance between mainstream accessibility and creative depth, with particular praise for its universal appeal and groove-focused foundation.",
+				themes: [
+					{
+						title: "Radio Potential",
+						description: "Strong commercial viability with catchy hooks and optimal length for broadcasting.",
+						color: "accent"
+					},
+					{
+						title: "Universal Appeal",
+						description: "Successfully bridges generational gaps and appeals to diverse listener demographics.",
+						color: "teal"
+					},
+					{
+						title: "Groove Foundation",
+						description: "Solid rhythmic elements and bassline work provide strong musical foundation.",
+						color: "amber"
+					}
+				],
+				avgRating: "4.2/5"
+			},
+			5: {
+				sentiment: "Artistically Profound",
+				description: "This track is being hailed as a work of pure artistry that transcends genre boundaries. Critics and fans alike recognize its sophisticated emotional architecture and genre-defying innovation. Reviews consistently highlight the masterful composition, impressive production quality, and the artist's ability to create something both accessible and deeply artistic.",
+				themes: [
+					{
+						title: "Artistic Vision",
+						description: "Praised for sophisticated emotional building and release, resembling master craftsmanship.",
+						color: "accent"
+					},
+					{
+						title: "Genre Innovation",
+						description: "Successfully blends multiple styles while maintaining organic coherence.",
+						color: "violet"
+					},
+					{
+						title: "Production Excellence",
+						description: "Impressive technical quality that showcases modern production capabilities.",
+						color: "cyan"
+					}
+				],
+				avgRating: "4.4/5"
+			},
+			6: {
+				sentiment: "Emotionally Resonant",
+				description: "Reviews reveal deep emotional connection across all listener types. Critics praise the profound lyrical content and meaningful composition, while the community responds with personal testimonials about the track's impact. The consensus highlights exceptional songwriting craft, pristine production quality, and the rare ability to create universal emotional resonance.",
+				themes: [
+					{
+						title: "Emotional Connection",
+						description: "Creates profound personal impact and meaningful moments for diverse listeners.",
+						color: "accent"
+					},
+					{
+						title: "Lyrical Depth",
+						description: "Sophisticated wordplay and metaphors create multiple layers of meaning.",
+						color: "rose"
+					},
+					{
+						title: "Educational Value",
+						description: "Serves as textbook example of quality production and songwriting techniques.",
+						color: "emerald"
+					}
+				],
+				avgRating: "4.7/5"
+			},
+			7: {
+				sentiment: "Transcendently Exceptional",
+				description: "This track has achieved near-universal acclaim as a generational masterpiece. Critics describe it as career-defining work that represents the pinnacle of contemporary music creation. Reviews consistently use superlative language, with both professional critics and passionate fans positioning it as a transformative listening experience that showcases perfect fusion of innovation and accessibility.",
+				themes: [
+					{
+						title: "Generational Impact",
+						description: "Positioned as era-defining work that will influence future musical development.",
+						color: "accent"
+					},
+					{
+						title: "Technical Perfection",
+						description: "Audiophile-quality production with perfect spatial positioning and frequency response.",
+						color: "indigo"
+					},
+					{
+						title: "Emotional Transcendence",
+						description: "Creates magical, goosebump-inducing moments that defy easy description.",
+						color: "gold"
+					}
+				],
+				avgRating: "4.9/5"
+			}
+		};
+
+		return aiSummaryDatabase[songId] || aiSummaryDatabase[1];
+	};
+
+	const aiSummary = getAISummary(song.id);
+
 	const renderVinyls = (rating: number) => {
 		return (
 			<div className="flex items-center space-x-1">
@@ -1157,66 +1330,29 @@ export function SongDetail({
 									<div className="flex items-center space-x-2 mb-3">
 										<TrendingUp className="w-4 h-4 text-accent" />
 										<span className="text-accent">
-											Overall Sentiment: Highly Positive
+											Overall Sentiment: {aiSummary.sentiment}
 										</span>
 									</div>
 									<p className="text-muted-foreground leading-relaxed">
-										Critics and fans are unanimous in their
-										praise for this track. The consensus
-										highlights exceptional production
-										quality, emotional depth, and
-										sophisticated songwriting. Both
-										professional reviewers and the community
-										emphasize the artist's growth and
-										technical mastery, with particular
-										acclaim for the dynamic arrangement and
-										memorable melodic hooks.
+										{aiSummary.description}
 									</p>
 								</div>
 
 								{/* Key Themes */}
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-									<div className="bg-muted/50 p-4 border border-accent/20">
-										<div className="flex items-center space-x-2 mb-2">
-											<div className="w-2 h-2 bg-accent"></div>
-											<span className="text-accent">
-												Production Quality
-											</span>
+									{aiSummary.themes.map((theme, index) => (
+										<div key={index} className="bg-muted/50 p-4 border border-accent/20">
+											<div className="flex items-center space-x-2 mb-2">
+												<div className={`w-2 h-2 bg-${theme.color}-400 rounded-full`}></div>
+												<span className={`text-${theme.color}-300`}>
+													{theme.title}
+												</span>
+											</div>
+											<p className="text-muted-foreground text-sm">
+												{theme.description}
+											</p>
 										</div>
-										<p className="text-muted-foreground text-sm">
-											Consistently praised for pristine
-											mixing, clear instrumentation, and
-											dynamic range preservation.
-										</p>
-									</div>
-
-									<div className="bg-gray-800/50 rounded-lg p-4 border border-purple-500/20">
-										<div className="flex items-center space-x-2 mb-2">
-											<div className="w-2 h-2 bg-pink-400 rounded-full"></div>
-											<span className="text-pink-300">
-												Emotional Impact
-											</span>
-										</div>
-										<p className="text-gray-400 text-sm">
-											Noted for its ability to create
-											genuine emotional resonance and
-											memorable musical moments.
-										</p>
-									</div>
-
-									<div className="bg-gray-800/50 rounded-lg p-4 border border-purple-500/20">
-										<div className="flex items-center space-x-2 mb-2">
-											<div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-											<span className="text-blue-300">
-												Artistic Growth
-											</span>
-										</div>
-										<p className="text-gray-400 text-sm">
-											Critics highlight significant
-											evolution in the artist's sound and
-											songwriting maturity.
-										</p>
-									</div>
+									))}
 								</div>
 
 								{/* Quick Stats */}
@@ -1225,13 +1361,13 @@ export function SongDetail({
 										<div className="flex items-center space-x-2">
 											<CheckCircle className="w-4 h-4 text-green-400" />
 											<span className="text-gray-300 text-sm">
-												3 Critic Reviews
+												{criticReviews.length} Critic Reviews
 											</span>
 										</div>
 										<div className="flex items-center space-x-2">
 											<Users className="w-4 h-4 text-purple-400" />
 											<span className="text-gray-300 text-sm">
-												5 Community Reviews
+												{communityReviews.length} Community Reviews
 											</span>
 										</div>
 										<div className="flex items-center space-x-2">
@@ -1240,7 +1376,7 @@ export function SongDetail({
 												filled={true}
 											/>
 											<span className="text-gray-300 text-sm">
-												Avg. 4.6/5
+												Avg. {aiSummary.avgRating}
 											</span>
 										</div>
 									</div>
