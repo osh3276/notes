@@ -60,7 +60,7 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 		setIsSearching(true);
 		try {
 			const response = await fetch(
-				`/api/search/tracks?q=${encodeURIComponent(query)}&limit=20`
+				`/api/search/tracks?q=${encodeURIComponent(query)}&limit=20`,
 			);
 			const data = await response.json();
 
@@ -94,7 +94,7 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 				</div>
 
 				{/* Centered Search Bar */}
-				<div className="flex-1 max-w-md mx-8">
+				<div className="flex-1 max-w-2xl mx-8">
 					<Popover open={showResults} onOpenChange={setShowResults}>
 						<PopoverTrigger asChild>
 							<div className="relative">
@@ -115,7 +115,7 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 								/>
 							</div>
 						</PopoverTrigger>
-						<PopoverContent className="w-[400px] p-0 bg-black/95 backdrop-blur-lg border-white/20">
+						<PopoverContent className="w-[600px] p-0 bg-black/95 backdrop-blur-lg border-white/20">
 							{searchResults.length > 0 ? (
 								<div className="max-h-[400px] overflow-auto">
 									{searchResults.map((track) => (
@@ -132,7 +132,10 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 										>
 											{track.album.images[0] && (
 												<img
-													src={track.album.images[0].url}
+													src={
+														track.album.images[0]
+															.url
+													}
 													alt={track.album.name}
 													className="w-10 h-10 rounded object-cover"
 												/>
