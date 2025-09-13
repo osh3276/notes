@@ -190,6 +190,11 @@ export function PopularSongs({
 				<div
 					ref={scrollContainerRef}
 					className="overflow-x-auto scrollbar-hide"
+					style={{
+						scrollbarWidth: 'none',
+						msOverflowStyle: 'none',
+						WebkitOverflowScrolling: 'touch'
+					}}
 				>
 					<div className="flex" style={{ width: "max-content" }}>
 						{/* Duplicate the songs array to create seamless loop */}

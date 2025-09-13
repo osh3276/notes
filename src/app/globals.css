@@ -40,3 +40,58 @@ h1, h2, h3, h4, h5, h6, .primary-font {
   font-family: var(--font-secondary), sans-serif;
   font-weight: 400;
 }
+
+/* Prevent hydration flash */
+html {
+  color-scheme: dark;
+}
+
+/* Hide content until hydration is complete to prevent flash */
+.hydrating {
+  visibility: hidden;
+}
+
+.hydrated {
+  visibility: visible;
+}
+
+/* Custom scrollbar styles for smooth horizontal scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  scroll-behavior: auto;
+  will-change: scroll-position;
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* Additional styles for better UI components */
+:root {
+  --border-radius: 0.5rem;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
