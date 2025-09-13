@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
+
 // Hardcoded album data
 const albums = [
   { id: 1, title: 'Blonde', artist: 'Frank Ocean', imageUrl: '/album1.jpg' },
@@ -55,14 +59,14 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 const AlbumCard = ({ album }: { album: typeof albums[0] }) => {
   return (
-    <div className="flex-shrink-0 w-48 group cursor-pointer">
+    <div className="flex-shrink-0 w-80 group cursor-pointer">
       <div className="relative">
-        <div className="w-48 h-48 bg-gray-800 rounded-lg flex items-center justify-center mb-3 transition-transform group-hover:scale-105">
-          <span className="text-gray-500 text-sm">album</span>
+        <div className="w-80 h-80 bg-gray-800 rounded-lg flex items-center justify-center mb-4 transition-transform group-hover:scale-105 shadow-lg">
+          <span className="text-gray-500 text-lg">album</span>
         </div>
       </div>
-      <h3 className="font-semibold text-white truncate">{album.title}</h3>
-      <p className="text-gray-400 text-sm truncate">{album.artist}</p>
+      <h3 className="font-semibold text-white truncate text-lg">{album.title}</h3>
+      <p className="text-gray-400 truncate">{album.artist}</p>
     </div>
   );
 };
@@ -90,6 +94,61 @@ const ReviewCard = ({ review }: { review: typeof recentReviews[0] }) => {
 };
 
 export default function Homepage() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    let animationId: number;
+    let isScrolling = true;
+    const scrollSpeed = 0.5; // pixels per frame
+
+    const autoScroll = () => {
+      if (!isScrolling) return;
+      
+      const currentScroll = container.scrollLeft;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      
+      // Calculate one-third of the total scroll width (where we reset)
+      const resetPoint = container.scrollWidth / 3;
+      
+      if (currentScroll >= resetPoint) {
+        // Reset to beginning for seamless loop
+        container.scrollLeft = 0;
+      } else {
+        // Continue scrolling
+        container.scrollLeft = currentScroll + scrollSpeed;
+      }
+      
+      animationId = requestAnimationFrame(autoScroll);
+    };
+
+    // Start autoscrolling
+    animationId = requestAnimationFrame(autoScroll);
+
+    // Pause on hover
+    const handleMouseEnter = () => {
+      isScrolling = false;
+    };
+
+    const handleMouseLeave = () => {
+      isScrolling = true;
+      if (!animationId) {
+        animationId = requestAnimationFrame(autoScroll);
+      }
+    };
+
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      container.removeEventListener('mouseenter', handleMouseEnter);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="container mx-auto px-6 py-8">
@@ -100,17 +159,21 @@ export default function Homepage() {
         </div>
 
         {/* Albums Section */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold">Albums</h2>
-            <span className="text-gray-400 text-sm">→</span>
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-semibold">Albums</h2>
+            <span className="text-gray-400 text-lg">→</span>
           </div>
           
           {/* Horizontal Scrolling Albums */}
-          <div className="overflow-x-auto">
-            <div className="flex gap-6 pb-4">
-              {albums.map((album) => (
-                <AlbumCard key={album.id} album={album} />
+          <div 
+            ref={scrollContainerRef}
+            className="overflow-x-auto scrollbar-hide px-2"
+          >
+            <div className="flex gap-8 pb-6 pr-8" style={{ width: 'max-content' }}>
+              {/* Duplicate albums for seamless infinite scroll */}
+              {[...albums, ...albums, ...albums].map((album, index) => (
+                <AlbumCard key={`${album.id}-${index}`} album={album} />
               ))}
             </div>
           </div>
