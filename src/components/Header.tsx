@@ -1,4 +1,4 @@
-import { Search, Menu, LogIn, LogOut, User } from "lucide-react";
+import { Search, Menu, LogIn, LogOut, User, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -10,13 +10,38 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
+interface Track {
+	id: string;
+	name: string;
+	artists: Array<{
+		id: string;
+		name: string;
+	}>;
+	album: {
+		id: string;
+		name: string;
+		images: Array<{
+			url: string;
+			height: number;
+			width: number;
+		}>;
+	};
+}
 
 interface HeaderProps {
 	onProfileClick?: () => void;
+	onSongSelect?: (songId: string) => void;
 }
 
-export function Header({ onProfileClick }: HeaderProps) {
+export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 	const { data: session, status } = useSession();
+	const [query, setQuery] = useState("");
+	const [isSearching, setIsSearching] = useState(false);
+	const [searchResults, setSearchResults] = useState<Track[]>([]);
+	const [showResults, setShowResults] = useState(false);
 
 	const handleSignIn = () => {
 		signIn("spotify");
@@ -24,6 +49,32 @@ export function Header({ onProfileClick }: HeaderProps) {
 
 	const handleSignOut = () => {
 		signOut();
+	};
+
+	const handleSearch = async () => {
+		if (!query.trim()) {
+			setSearchResults([]);
+			return;
+		}
+
+		setIsSearching(true);
+		try {
+			const response = await fetch(
+				`/api/search/tracks?q=${encodeURIComponent(query)}&limit=20`
+			);
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error || "Failed to search tracks");
+			}
+
+			setSearchResults(data.tracks);
+			setShowResults(true);
+		} catch (error) {
+			console.error("Search error:", error);
+		} finally {
+			setIsSearching(false);
+		}
 	};
 
 	return (
@@ -44,14 +95,68 @@ export function Header({ onProfileClick }: HeaderProps) {
 
 				{/* Centered Search Bar */}
 				<div className="flex-1 max-w-md mx-8">
-					<div className="relative">
-						<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-						<Input
-							type="search"
-							placeholder="Search artists, albums, reviews..."
-							className="pl-10 bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-gray-300"
-						/>
-					</div>
+					<Popover open={showResults} onOpenChange={setShowResults}>
+						<PopoverTrigger asChild>
+							<div className="relative">
+								{isSearching ? (
+									<Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 animate-spin" />
+								) : (
+									<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+								)}
+								<Input
+									type="search"
+									value={query}
+									onChange={(e) => {
+										setQuery(e.target.value);
+										if (e.target.value) handleSearch();
+									}}
+									placeholder="Search songs..."
+									className="pl-10 bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-gray-300"
+								/>
+							</div>
+						</PopoverTrigger>
+						<PopoverContent className="w-[400px] p-0 bg-black/95 backdrop-blur-lg border-white/20">
+							{searchResults.length > 0 ? (
+								<div className="max-h-[400px] overflow-auto">
+									{searchResults.map((track) => (
+										<div
+											key={track.id}
+											className="flex items-center space-x-3 p-3 hover:bg-white/10 cursor-pointer"
+											onClick={() => {
+												if (onSongSelect) {
+													onSongSelect(track.id);
+													setShowResults(false);
+													setQuery("");
+												}
+											}}
+										>
+											{track.album.images[0] && (
+												<img
+													src={track.album.images[0].url}
+													alt={track.album.name}
+													className="w-10 h-10 rounded object-cover"
+												/>
+											)}
+											<div className="flex-1 min-w-0">
+												<p className="text-white font-medium truncate">
+													{track.name}
+												</p>
+												<p className="text-gray-400 text-sm truncate">
+													{track.artists
+														.map((a) => a.name)
+														.join(", ")}
+												</p>
+											</div>
+										</div>
+									))}
+								</div>
+							) : query && !isSearching ? (
+								<div className="p-3 text-gray-400">
+									No results found
+								</div>
+							) : null}
+						</PopoverContent>
+					</Popover>
 				</div>
 
 				{/* Profile Picture and Menu */}

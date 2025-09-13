@@ -99,9 +99,38 @@ export default function App() {
 		);
 	}
 
+	const handleSearchSongSelect = async (songId: string) => {
+		try {
+			const response = await fetch(`/api/track/${songId}`);
+			const data = await response.json();
+			
+			if (!response.ok) {
+				throw new Error(data.error || 'Failed to fetch song details');
+			}
+
+			// Convert Spotify track to your Song format
+			const song: Song = {
+				id: parseInt(data.id), // or use the Spotify ID directly if you update your Song interface
+				title: data.name,
+				artist: data.artists[0].name,
+				albumArt: data.album.images[0]?.url || '',
+				rating: data.popularity / 20, // Convert 0-100 popularity to 0-5 rating
+				reviewCount: 0, // You might want to fetch this from your database
+				genres: data.genres || []
+			};
+
+			handleSongSelect(song);
+		} catch (error) {
+			console.error('Error fetching song details:', error);
+		}
+	};
+
 	return (
 		<div className="min-h-screen bg-black dark">
-			<Header onProfileClick={handleProfileClick} />
+			<Header 
+				onProfileClick={handleProfileClick}
+				onSongSelect={handleSearchSongSelect}
+			/>
 			<main className="relative">
 				<PopularSongs
 					onSongSelect={handleSongSelect}
