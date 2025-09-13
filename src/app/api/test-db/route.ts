@@ -76,7 +76,7 @@ export async function GET() {
 				error: "Database connection failed",
 				message:
 					error instanceof Error ? error.message : "Unknown error",
-				databaseUrl: process.env.DATABASE_URL?.substring(0, 30) + "...",
+				databaseUrl: process.env.DATABASE_URL,
 			},
 			{ status: 500 },
 		);
