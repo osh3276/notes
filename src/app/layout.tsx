@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo_Narrow, Archivo } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const archivoNarrow = Archivo_Narrow({
+	weight: ["400", "500", "600", "700"],
+	variable: "--font-primary",
 	subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
+const archivo = Archivo({
+	weight: ["400", "500", "600", "700"],
+	variable: "--font-secondary",
 	subsets: ["latin"],
 });
 
@@ -26,7 +28,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${archivoNarrow.variable} ${archivo.variable} antialiased`}
 			>
 				<Providers>{children}</Providers>
 			</body>
