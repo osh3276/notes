@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface Track {
 	id: string;
@@ -128,9 +129,14 @@ export default function SpotifySearch() {
 								)}
 
 								<div className="flex-1 min-w-0">
-									<h3 className="text-lg font-medium text-gray-900 truncate">
-										{track.name}
-									</h3>
+									<Link
+										href={`/song/${track.id}`}
+										className="block hover:text-green-600 transition-colors"
+									>
+										<h3 className="text-lg font-medium text-gray-900 truncate hover:text-green-600">
+											{track.name}
+										</h3>
+									</Link>
 									<p className="text-sm text-gray-600 truncate">
 										by{" "}
 										{track.artists
@@ -163,13 +169,20 @@ export default function SpotifySearch() {
 										</audio>
 									)}
 
+									<Link
+										href={`/song/${track.id}`}
+										className="text-blue-600 hover:text-blue-800 font-medium text-sm"
+									>
+										Details
+									</Link>
+
 									<a
 										href={track.external_urls.spotify}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="text-green-600 hover:text-green-800 font-medium"
+										className="text-green-600 hover:text-green-800 font-medium text-sm"
 									>
-										Open in Spotify
+										Spotify
 									</a>
 								</div>
 							</div>
