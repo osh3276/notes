@@ -100,7 +100,7 @@ export default function App() {
 	}
 
 	return (
-		<div className="min-h-screen bg-background dark">
+		<div className="min-h-screen bg-black dark">
 			<Header onProfileClick={handleProfileClick} />
 			<main className="relative">
 				<PopularSongs
