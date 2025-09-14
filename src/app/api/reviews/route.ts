@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
         UPDATE song_feedback
         SET rating = ${rating}, review = ${review || null}, created_at = NOW()
         WHERE song_id = ${song_id} AND reviewer_id = ${reviewer_id}
-        RETURNING id, song_id, reviewer_id, rating, review, created_at
+        RETURNING id, song_id, reviewer_id, rating, review, verified, created_at
       `;
 
 			return NextResponse.json({
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
 			const result = await sql`
         INSERT INTO song_feedback (song_id, reviewer_id, rating, review)
         VALUES (${song_id}, ${reviewer_id}, ${rating}, ${review || null})
-        RETURNING id, song_id, reviewer_id, rating, review, created_at
+        RETURNING id, song_id, reviewer_id, rating, review, verified, created_at
       `;
 
 			return NextResponse.json(
@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
 
 		// Get all reviews for the song
 		const reviews = await sql`
-      SELECT id, song_id, reviewer_id, rating, review, created_at
+      SELECT id, song_id, reviewer_id, rating, review, verified, created_at
       FROM song_feedback
       WHERE song_id = ${song_id}
       ORDER BY created_at DESC

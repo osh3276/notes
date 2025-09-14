@@ -11,6 +11,7 @@ export async function GET() {
         reviewer_id VARCHAR(255) NOT NULL,
         rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
         review TEXT,
+        verified BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         UNIQUE(song_id, reviewer_id)
       )
