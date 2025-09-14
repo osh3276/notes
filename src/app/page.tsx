@@ -105,7 +105,13 @@ export default function App() {
 			/>
 			<main className="relative">
 				<PopularSongs
-					onSongSelect={handleSongSelect}
+					onSongSelect={(songFromPopularSongs) => {
+						const songForHandler = {
+							...songFromPopularSongs,
+							id: Number(songFromPopularSongs.id), // Convert id from string to number
+						};
+						handleSongSelect(songForHandler);
+					}}
 					onGenreClick={handleGenreClick}
 				/>
 				<RecentReviews />
