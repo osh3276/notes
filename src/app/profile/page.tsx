@@ -26,6 +26,15 @@ export default function ProfilePage() {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(true);
+	const [userStats, setUserStats] = useState({
+		reviews: 0,
+		followers: 0,
+		following: 0,
+		likes: 0,
+	});
+	const [userReviews, setUserReviews] = useState([]);
+	const [userFavorites, setUserFavorites] = useState([]);
+	const [favoriteSongs, setFavoriteSongs] = useState([]);
 
 	useEffect(() => {
 		if (status !== "loading") {
@@ -40,73 +49,119 @@ export default function ProfilePage() {
 		}
 	}, [status, router]);
 
-	// Mock data for demo purposes - in a real app, this would come from your database
-	const generateUserData = (session: any) => {
-		if (!session?.user) return null;
+	// Fetch user data from database
+	useEffect(() => {
+		const fetchUserData = async () => {
+			if (!session?.user?.email) return;
 
-		return {
-			name: session.user.name || "Music Lover",
-			username: `@${session.user.name?.toLowerCase().replace(/\s+/g, "") || "musiclover"}`,
-			avatar: session.user.image || "/default-avatar.png",
-			coverImage:
-				"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=300&fit=crop",
-			bio: "Music enthusiast discovering new sounds and sharing honest reviews. 🎵",
-			location: "Connected via Spotify",
-			joinDate: "Recently joined",
-			stats: {
-				reviews: Math.floor(Math.random() * 50) + 10,
-				followers: Math.floor(Math.random() * 500) + 100,
-				following: Math.floor(Math.random() * 200) + 50,
-				likes: Math.floor(Math.random() * 1000) + 200,
-			},
-			badges: ["Spotify Connected", "New Member"],
-			spotifyProfile: session.user.spotifyProfile || null,
+			try {
+				// Fetch user stats
+				const statsResponse = await fetch("/api/user-stats");
+				if (statsResponse.ok) {
+					const statsData = await statsResponse.json();
+					setUserStats(statsData.stats);
+				}
+
+				// Fetch user reviews
+				const reviewsResponse = await fetch("/api/user-reviews");
+				if (reviewsResponse.ok) {
+					const reviewsData = await reviewsResponse.json();
+					setUserReviews(reviewsData.reviews);
+				}
+
+				// Fetch user favorites
+				const favoritesResponse = await fetch("/api/favorites");
+				if (favoritesResponse.ok) {
+					const favoritesData = await favoritesResponse.json();
+					setUserFavorites(favoritesData.favorites);
+
+					// Fetch song details for each favorite
+					const songDetails = await Promise.all(
+						favoritesData.favorites
+							.slice(0, 10)
+							.map(async (songId: string) => {
+								try {
+									const songResponse = await fetch(
+										`/api/track/${encodeURIComponent(songId)}`,
+									);
+									if (songResponse.ok) {
+										const songData =
+											await songResponse.json();
+										return {
+											id: songId,
+											title:
+												songData.name || "Unknown Song",
+											artist:
+												songData.artists
+													?.map((a: any) => a.name)
+													.join(", ") ||
+												"Unknown Artist",
+											albumArt:
+												songData.album?.images?.[0]
+													?.url || null,
+											album:
+												songData.album?.name ||
+												"Unknown Album",
+										};
+									}
+								} catch (error) {
+									console.error(
+										`Error fetching song ${songId}:`,
+										error,
+									);
+								}
+								return {
+									id: songId,
+									title: "Unknown Song",
+									artist: "Unknown Artist",
+									albumArt: null,
+									album: "Unknown Album",
+								};
+							}),
+					);
+					setFavoriteSongs(songDetails as any[]);
+				}
+			} catch (error) {
+				console.error("Error fetching user data:", error);
+			}
 		};
+
+		fetchUserData();
+	}, [session]);
+
+	const userData = session?.user
+		? {
+				name: session.user.name || "Music Lover",
+				username: `@${session.user.name?.toLowerCase().replace(/\s+/g, "") || "musiclover"}`,
+				avatar: session.user.image || "/default-avatar.png",
+				email: session.user.email,
+				bio: "Music enthusiast discovering new sounds and sharing honest reviews. 🎵",
+				location: "Connected via Spotify",
+				joinDate: new Date().toLocaleDateString("en-US", {
+					month: "long",
+					year: "numeric",
+				}),
+				stats: userStats,
+				badges: ["Spotify Connected"],
+			}
+		: null;
+
+	const formatTimeAgo = (dateString: string): string => {
+		const date = new Date(dateString);
+		const now = new Date();
+		const diffInSeconds = Math.floor(
+			(now.getTime() - date.getTime()) / 1000,
+		);
+
+		if (diffInSeconds < 60) return "just now";
+		if (diffInSeconds < 3600)
+			return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+		if (diffInSeconds < 86400)
+			return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+		if (diffInSeconds < 2592000)
+			return `${Math.floor(diffInSeconds / 86400)} days ago`;
+		return `${Math.floor(diffInSeconds / 2592000)} months ago`;
 	};
-
-	const userData = generateUserData(session);
-
-	const recentReviews = [
-		{
-			id: 1,
-			songTitle: "As It Was",
-			artist: "Harry Styles",
-			rating: 5,
-			reviewText:
-				"An absolute masterpiece! The production is clean and the emotional depth is incredible. Harry's vocal performance here is some of his best work.",
-			timeAgo: "2 hours ago",
-			likes: 23,
-		},
-		{
-			id: 2,
-			songTitle: "Anti-Hero",
-			artist: "Taylor Swift",
-			rating: 4,
-			reviewText:
-				"Taylor's vulnerability shines through in this introspective track. The lyrics are relatable and the production perfectly complements the mood.",
-			timeAgo: "1 day ago",
-			likes: 41,
-		},
-		{
-			id: 3,
-			songTitle: "Flowers",
-			artist: "Miley Cyrus",
-			rating: 4,
-			reviewText:
-				"A powerful anthem of self-love and independence. Miley's vocals are strong and the message resonates deeply.",
-			timeAgo: "3 days ago",
-			likes: 67,
-		},
-	];
-
-	const favoriteGenres = [
-		"Pop",
-		"Indie Rock",
-		"Electronic",
-		"Alternative",
-		"R&B",
-		"Hip-Hop",
-	];
 
 	const renderVinyls = (rating: number) => {
 		return (
@@ -172,8 +227,8 @@ export default function ProfilePage() {
 				{/* Cover Image */}
 				<div className="h-48 md:h-64 bg-gradient-to-r from-purple-900/50 to-pink-900/50 relative overflow-hidden">
 					<img
-						src={userData.coverImage}
-						alt="Profile cover"
+						src="https://images.unsplash.com/photo-1485579149622-c5e62810ccdf?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+						alt=""
 						className="w-full h-full object-cover opacity-60"
 					/>
 					<div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
@@ -268,10 +323,10 @@ export default function ProfilePage() {
 								</div>
 								<div className="text-center">
 									<p className="text-foreground text-xl">
-										{userData.stats.followers.toLocaleString()}
+										{userFavorites.length}
 									</p>
 									<p className="text-muted-foreground text-sm">
-										Followers
+										Favorites
 									</p>
 								</div>
 								<div className="text-center">
@@ -287,7 +342,7 @@ export default function ProfilePage() {
 										{userData.stats.likes.toLocaleString()}
 									</p>
 									<p className="text-muted-foreground text-sm">
-										Likes
+										Likes Received
 									</p>
 								</div>
 							</div>
@@ -350,81 +405,154 @@ export default function ProfilePage() {
 						</div>
 
 						<div className="grid gap-4">
-							{recentReviews.map((review) => (
-								<Card
-									key={review.id}
-									className="bg-card/60 border-border hover:bg-card transition-all duration-300"
-								>
-									<CardContent className="p-6">
-										<div className="flex items-start justify-between mb-4">
-											<div>
-												<h4 className="text-foreground mb-1 font-medium">
-													{review.songTitle}
-												</h4>
-												<p className="text-muted-foreground text-sm mb-2">
-													by {review.artist}
-												</p>
-												<div className="flex items-center space-x-2">
-													{renderVinyls(
-														review.rating,
-													)}
-													<span className="text-muted-foreground text-sm">
-														• {review.timeAgo}
-													</span>
+							{userReviews.length > 0 ? (
+								userReviews.map((review: any) => (
+									<Card
+										key={review.id}
+										className="bg-card/60 border-border hover:bg-card transition-all duration-300"
+									>
+										<CardContent className="p-6">
+											<div className="flex items-start justify-between mb-4">
+												<div>
+													<h4 className="text-foreground mb-1 font-medium">
+														{review.songTitle ||
+															"Unknown Song"}
+													</h4>
+													<p className="text-muted-foreground text-sm mb-2">
+														by{" "}
+														{review.artist ||
+															"Unknown Artist"}
+													</p>
+													<div className="flex items-center space-x-2">
+														{renderVinyls(
+															review.rating,
+														)}
+														<span className="text-muted-foreground text-sm">
+															•{" "}
+															{formatTimeAgo(
+																review.created_at,
+															)}
+														</span>
+													</div>
 												</div>
 											</div>
-										</div>
 
-										<p className="text-muted-foreground mb-4 leading-relaxed">
-											{review.reviewText}
+											<p className="text-muted-foreground mb-4 leading-relaxed">
+												{review.review ||
+													"No review text"}
+											</p>
+
+											<div className="flex items-center space-x-4">
+												<button className="flex items-center space-x-1 text-muted-foreground hover:text-red-400 text-sm transition-colors">
+													<Heart className="w-4 h-4" />
+													<span>
+														{review.likes || 0}
+													</span>
+												</button>
+												<button
+													className="flex items-center space-x-1 text-muted-foreground hover:text-foreground text-sm transition-colors"
+													onClick={() =>
+														router.push(
+															`/song/${review.song_id}`,
+														)
+													}
+												>
+													<ExternalLink className="w-4 h-4" />
+													<span>View Song</span>
+												</button>
+											</div>
+										</CardContent>
+									</Card>
+								))
+							) : (
+								<Card className="bg-card/60 border-border">
+									<CardContent className="p-6 text-center">
+										<MessageSquare className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+										<h4 className="text-foreground mb-2">
+											No Reviews Yet
+										</h4>
+										<p className="text-muted-foreground">
+											Start reviewing songs to see them
+											here!
 										</p>
-
-										<div className="flex items-center space-x-4">
-											<button className="flex items-center space-x-1 text-muted-foreground hover:text-red-400 text-sm transition-colors">
-												<Heart className="w-4 h-4" />
-												<span>{review.likes}</span>
-											</button>
-											<button className="flex items-center space-x-1 text-muted-foreground hover:text-foreground text-sm transition-colors">
-												<MessageSquare className="w-4 h-4" />
-												<span>Reply</span>
-											</button>
-										</div>
 									</CardContent>
 								</Card>
-							))}
+							)}
 						</div>
 					</TabsContent>
 
 					<TabsContent value="favorites" className="space-y-6 mt-6">
 						<div className="flex items-center justify-between">
 							<h3 className="text-foreground text-lg">
-								Favorite Genres
+								Favorite Songs
 							</h3>
+							<Badge className="bg-accent/20 text-accent border-accent/30">
+								{userFavorites.length} Songs
+							</Badge>
 						</div>
 
-						<div className="flex flex-wrap gap-2">
-							{favoriteGenres.map((genre, index) => (
-								<Badge
-									key={index}
-									className="bg-accent/20 text-accent border-accent/30 hover:bg-accent/30 cursor-pointer"
-								>
-									<Music className="w-3 h-3 mr-1" />
-									{genre}
-								</Badge>
-							))}
-						</div>
+						{favoriteSongs.length > 0 ? (
+							<div className="grid gap-4">
+								{favoriteSongs.map(
+									(song: any, index: number) => (
+										<Card
+											key={index}
+											className="bg-card/60 border-border hover:bg-card transition-all duration-300 cursor-pointer"
+											onClick={() =>
+												router.push(`/song/${song.id}`)
+											}
+										>
+											<CardContent className="p-4">
+												<div className="flex items-center space-x-4">
+													{/* Album Art */}
+													<div className="w-12 h-12 overflow-hidden rounded border border-accent/30 flex-shrink-0">
+														<img
+															src={
+																song.albumArt ||
+																"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=150&h=150&fit=crop"
+															}
+															alt={`${song.title} album art`}
+															className="w-full h-full object-cover"
+														/>
+													</div>
 
-						<Card className="bg-card/60 border-border">
-							<CardContent className="p-6 text-center">
-								<Heart className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-								<h4 className="text-foreground mb-2">
-									No Favorite Songs Yet
-								</h4>
-								<p className="text-muted-foreground">
-									Start hearting songs to see them here!
-								</p>
-							</CardContent>
-						</Card>
+													{/* Song Info */}
+													<div className="flex-1 min-w-0">
+														<h4 className="text-foreground font-medium truncate">
+															{song.title}
+														</h4>
+														<p className="text-muted-foreground text-sm truncate">
+															by {song.artist}
+														</p>
+														<p className="text-muted-foreground text-xs truncate">
+															{song.album}
+														</p>
+													</div>
+
+													{/* Action */}
+													<div className="flex items-center space-x-2">
+														<Heart className="w-4 h-4 text-red-400 fill-current" />
+														<ExternalLink className="w-4 h-4 text-muted-foreground" />
+													</div>
+												</div>
+											</CardContent>
+										</Card>
+									),
+								)}
+							</div>
+						) : (
+							<Card className="bg-card/60 border-border">
+								<CardContent className="p-6 text-center">
+									<Heart className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+									<h4 className="text-foreground mb-2">
+										No Favorite Songs Yet
+									</h4>
+									<p className="text-muted-foreground">
+										Start hearting songs to see them here!
+									</p>
+								</CardContent>
+							</Card>
+						)}
 					</TabsContent>
 
 					<TabsContent value="following" className="space-y-6 mt-6">
