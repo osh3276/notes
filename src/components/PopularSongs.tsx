@@ -33,11 +33,11 @@ interface SpotifyRelease {
 }
 
 interface Song {
-	id: number;
+	id: string;
 	title: string;
 	artist: string;
 	albumArt: string;
-	rating: number;
+	rating: number | string;
 	reviewCount: number;
 	genres: string[];
 }
@@ -56,6 +56,9 @@ export function PopularSongs({
 	const [newReleases, setNewReleases] = useState<SpotifyRelease[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [songRatings, setSongRatings] = useState<
+		Map<string, { rating: number | string; reviewCount: number }>
+	>(new Map());
 
 	// Fetch new releases from Spotify
 	useEffect(() => {
@@ -86,6 +89,59 @@ export function PopularSongs({
 
 		fetchNewReleases();
 	}, []);
+
+	// Fetch ratings for all songs
+	useEffect(() => {
+		const fetchRatings = async () => {
+			if (newReleases.length === 0) return;
+
+			const ratingsMap = new Map<
+				string,
+				{ rating: number | string; reviewCount: number }
+			>();
+
+			for (const release of newReleases) {
+				try {
+					const response = await fetch(
+						`/api/reviews?song_id=${encodeURIComponent(release.id)}`,
+					);
+					const data = await response.json();
+
+					if (response.ok && data.statistics) {
+						if (data.statistics.total_reviews > 0) {
+							ratingsMap.set(release.id, {
+								rating: data.statistics.average_rating,
+								reviewCount: data.statistics.total_reviews,
+							});
+						} else {
+							ratingsMap.set(release.id, {
+								rating: "N/A",
+								reviewCount: 0,
+							});
+						}
+					} else {
+						ratingsMap.set(release.id, {
+							rating: "N/A",
+							reviewCount: 0,
+						});
+					}
+				} catch (error) {
+					console.error(
+						`Error fetching rating for ${release.id}:`,
+						error,
+					);
+					ratingsMap.set(release.id, {
+						rating: "N/A",
+						reviewCount: 0,
+					});
+				}
+			}
+
+			setSongRatings(ratingsMap);
+		};
+
+		fetchRatings();
+	}, [newReleases]);
 
 	// Auto scroll functionality
 	useEffect(() => {
@@ -146,15 +202,18 @@ export function PopularSongs({
 			.sort(() => 0.5 - Math.random())
 			.slice(0, Math.floor(Math.random() * 3) + 1);
 
+		const ratingData = songRatings.get(release.id) || {
+			rating: "N/A",
+			reviewCount: 0,
+		};
+
 		return {
-			id:
-				parseInt(release.id.slice(-6), 36) ||
-				Math.floor(Math.random() * 1000000), // Convert Spotify ID to number
+			id: release.id, // Keep as Spotify ID string
 			title: release.name,
 			artist: release.artists.map((a) => a.name).join(", "),
 			albumArt: release.album.images[0]?.url || "",
-			rating: 4.0 + Math.random() * 1.0, // Random rating between 4.0-5.0 for new releases
-			reviewCount: Math.floor(Math.random() * 500) + 50, // Random review count for demo
+			rating: ratingData.rating, // Use real rating from database or "N/A"
+			reviewCount: ratingData.reviewCount, // Use real review count from database
 			genres: randomGenres,
 		};
 	};
@@ -164,9 +223,26 @@ export function PopularSongs({
 		router.push(`/song/${release.id}`);
 	};
 
-	const renderVinyls = (rating: number) => {
-		const fullVinyls = Math.floor(rating);
-		const hasHalfVinyl = rating % 1 !== 0;
+	const renderVinyls = (rating: number | string) => {
+		if (rating === "N/A") {
+			return (
+				<div className="flex items-center space-x-1">
+					{[...Array(5)].map((_, i) => (
+						<VinylRecordIcon
+							key={`empty-${i}`}
+							className="w-4 h-4 opacity-30"
+							filled={false}
+						/>
+					))}
+					<span className="text-sm text-gray-300 ml-2">N/A</span>
+				</div>
+			);
+		}
+
+		const numRating =
+			typeof rating === "string" ? parseFloat(rating) : rating;
+		const fullVinyls = Math.floor(numRating);
+		const hasHalfVinyl = numRating % 1 !== 0;
 		const emptyVinyls = 5 - fullVinyls - (hasHalfVinyl ? 1 : 0);
 
 		return (
@@ -192,7 +268,7 @@ export function PopularSongs({
 					/>
 				))}
 				<span className="text-sm text-gray-300 ml-2">
-					{rating.toFixed(1)}
+					{typeof rating === "number" ? rating.toFixed(1) : rating}
 				</span>
 			</div>
 		);

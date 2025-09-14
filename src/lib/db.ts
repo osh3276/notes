@@ -50,7 +50,7 @@ export async function testConnections(): Promise<{
 
 		// Test Gemini API
 		const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-		const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+		const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 		const prompt = "Say 'API connection successful' if you can read this.";
 		const response = await model.generateContent(prompt);
 		const geminiStatus = response.response.text();
@@ -68,7 +68,7 @@ export async function testConnections(): Promise<{
 export async function getSongReviewsSummary(songId: string): Promise<string> {
 	// Initialize Gemini API
 	const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-	const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+	const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 	try {
 		// Get reviews from database

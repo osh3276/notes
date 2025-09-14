@@ -1,69 +1,108 @@
 import { Card, CardContent } from "./ui/card";
 import { MessageSquare } from "lucide-react";
-
+import { useEffect, useState } from "react";
 import { VinylRecordIcon } from "./VinylRecordIcon";
 
 interface Review {
 	id: number;
-	userName: string;
-	userAvatar: string;
+	song_id: string;
+	reviewer_id: string;
 	rating: number;
-	reviewText: string;
-	songTitle: string;
-	artist: string;
-	albumArt: string;
-	timeAgo: string;
-	likes: number;
+	review: string;
+	created_at: string;
+	verified: boolean;
+	userName?: string;
+	userAvatar?: string;
+	songTitle?: string;
+	artist?: string;
+	albumArt?: string;
+	timeAgo?: string;
+	likes?: number;
 }
 
 export function RecentReviews() {
-	const popularReviews: Review[] = [
-		{
-			id: 1,
-			userName: "MusicLover92",
-			userAvatar:
-				"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-			rating: 5,
-			reviewText:
-				"This track absolutely blew me away! The production quality is incredible and the emotional depth in the lyrics really resonates. Been on repeat for days now.",
-			songTitle: "Midnight Reflections",
-			artist: "Luna Eclipse",
-			albumArt:
-				"https://images.unsplash.com/photo-1629923759854-156b88c433aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhbGJ1bSUyMGNvdmVyJTIwdmlueWwlMjByZWNvcmR8ZW58MXx8fHwxNzU3NzE2MDU1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-			timeAgo: "2 hours ago",
-			likes: 47,
-		},
-		{
-			id: 2,
-			userName: "VinylCollector",
-			userAvatar:
-				"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
-			rating: 4,
-			reviewText:
-				"Great synth work and nostalgic vibes throughout. Reminds me of the classic 80s sound but with a modern twist. Solid addition to any playlist.",
-			songTitle: "Neon Dreams",
-			artist: "Synth Wave",
-			albumArt:
-				"https://images.unsplash.com/photo-1562712558-ac2eaab4a3b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMGFsYnVtJTIwYXJ0d29ya3xlbnwxfHx8fDE3NTc3Mzc2OTN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-			timeAgo: "5 hours ago",
-			likes: 23,
-		},
-		{
-			id: 3,
-			userName: "JazzFanatic",
-			userAvatar:
-				"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-			rating: 5,
-			reviewText:
-				"Pure magic! The way they blend traditional jazz with contemporary elements is masterful. Every note feels intentional and the improvisation sections are breathtaking.",
-			songTitle: "Jazz at Midnight",
-			artist: "Blue Note Quartet",
-			albumArt:
-				"https://images.unsplash.com/photo-1713771541849-7909c4a9431a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqYXp6JTIwbXVzaWMlMjBhbGJ1bXxlbnwxfHx8fDE3NTc3Mzc2OTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-			timeAgo: "1 day ago",
-			likes: 89,
-		},
-	];
+	const [recentReviews, setRecentReviews] = useState<Review[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	// Fetch recent reviews from database
+	useEffect(() => {
+		const fetchRecentReviews = async () => {
+			try {
+				setLoading(true);
+				const response = await fetch("/api/recent-reviews?limit=3");
+				const data = await response.json();
+
+				if (response.ok && data.reviews) {
+					// Transform the data to include display properties
+					const transformedReviews = await Promise.all(
+						data.reviews.map(async (review: Review) => {
+							// Fetch user details
+							const userResponse = await fetch(
+								`/api/user?user_id=${encodeURIComponent(review.reviewer_id)}`,
+							);
+							const userData = userResponse.ok
+								? await userResponse.json()
+								: null;
+
+							// Fetch song details (you'll need to create this endpoint)
+							const songResponse = await fetch(
+								`/api/track/${encodeURIComponent(review.song_id)}`,
+							);
+							const songData = songResponse.ok
+								? await songResponse.json()
+								: null;
+
+							return {
+								...review,
+								userName:
+									userData?.user?.name || "Anonymous User",
+								userAvatar:
+									userData?.user?.image ||
+									"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+								songTitle: songData?.name || "Unknown Song",
+								artist:
+									songData?.artists
+										?.map((a: any) => a.name)
+										.join(", ") || "Unknown Artist",
+								albumArt:
+									songData?.album?.images?.[0]?.url ||
+									"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=150&h=150&fit=crop",
+								timeAgo: formatTimeAgo(
+									new Date(review.created_at),
+								),
+								likes: Math.floor(Math.random() * 20), // Replace with actual likes data
+								reviewText: review.review || "",
+							};
+						}),
+					);
+					setRecentReviews(transformedReviews);
+				}
+			} catch (error) {
+				console.error("Failed to fetch recent reviews:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchRecentReviews();
+	}, []);
+
+	// Helper function to format time ago
+	const formatTimeAgo = (date: Date): string => {
+		const now = new Date();
+		const diffInSeconds = Math.floor(
+			(now.getTime() - date.getTime()) / 1000,
+		);
+
+		if (diffInSeconds < 60) return "just now";
+		if (diffInSeconds < 3600)
+			return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+		if (diffInSeconds < 86400)
+			return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+		if (diffInSeconds < 2592000)
+			return `${Math.floor(diffInSeconds / 86400)} days ago`;
+		return `${Math.floor(diffInSeconds / 2592000)} months ago`;
+	};
 
 	const renderVinyls = (rating: number) => {
 		return (
@@ -83,13 +122,15 @@ export function RecentReviews() {
 		<section className="py-16 px-4">
 			<div className="container mx-auto max-w-7xl">
 				<div className="mb-12 text-center">
-					<h2 className="text-foreground mb-2">Recent Reviews</h2>
+					<h2 className="text-foreground mb-2 text-6xl">
+						Recent Reviews
+					</h2>
 					<div className="w-32 h-0.5 bg-accent/50 mx-auto"></div>
 				</div>
 
 				{/* Review Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-					{popularReviews.map((review) => (
+					{recentReviews.map((review) => (
 						<Card
 							key={review.id}
 							className="bg-muted/40 border-border hover:bg-muted/60 transition-all duration-300 cursor-pointer group relative overflow-hidden"
@@ -124,7 +165,7 @@ export function RecentReviews() {
 								{/* Review Text */}
 								<div className="mb-4">
 									<p className="text-muted-foreground text-sm leading-relaxed line-clamp-4">
-										{review.reviewText}
+										{review.review}
 									</p>
 								</div>
 
@@ -155,15 +196,28 @@ export function RecentReviews() {
 											<MessageSquare className="w-3 h-3" />
 											<span>{review.likes} likes</span>
 										</div>
-										<button className="text-accent hover:text-accent/80 text-xs transition-colors">
-											Read full review →
-										</button>
 									</div>
 								</div>
 							</CardContent>
 						</Card>
 					))}
 				</div>
+
+				{/* Loading State */}
+				{loading && (
+					<div className="flex items-center justify-center py-12">
+						<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+					</div>
+				)}
+
+				{/* Empty State */}
+				{!loading && recentReviews.length === 0 && (
+					<div className="text-center py-12">
+						<p className="text-muted-foreground">
+							No recent reviews available
+						</p>
+					</div>
+				)}
 			</div>
 		</section>
 	);

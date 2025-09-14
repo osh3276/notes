@@ -102,7 +102,7 @@ interface Song {
 	title: string;
 	artist: string;
 	albumArt: string;
-	rating: number;
+	rating: number | string;
 	reviewCount: number;
 	genres: string[];
 	album?: string;
@@ -119,6 +119,8 @@ export default function SongDetailsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [aiSummary, setAiSummary] = useState<string | null>(null);
+	const [songRating, setSongRating] = useState<number | string>("N/A");
+	const [reviewCount, setReviewCount] = useState<number>(0);
 
 	const trackId = params.id as string;
 
@@ -140,6 +142,32 @@ export default function SongDetailsPage() {
 				}
 
 				setTrack(data);
+
+				// Fetch reviews to calculate rating and count
+				try {
+					const reviewsResponse = await fetch(
+						`/api/reviews?song_id=${encodeURIComponent(trackId)}`,
+					);
+					const reviewsData = await reviewsResponse.json();
+
+					if (reviewsResponse.ok && reviewsData.statistics) {
+						setReviewCount(reviewsData.statistics.total_reviews);
+						if (reviewsData.statistics.total_reviews > 0) {
+							setSongRating(
+								reviewsData.statistics.average_rating,
+							);
+						} else {
+							setSongRating("N/A");
+						}
+					} else {
+						setSongRating("N/A");
+						setReviewCount(0);
+					}
+				} catch (reviewsErr) {
+					console.error("Error fetching reviews:", reviewsErr);
+					setSongRating("N/A");
+					setReviewCount(0);
+				}
 
 				// Fetch AI summary after getting track details
 				try {
@@ -278,8 +306,8 @@ export default function SongDetailsPage() {
 		title: track.name,
 		artist: track.artists.map((artist) => artist.name).join(", "),
 		albumArt: track.album.images[0]?.url || "",
-		rating: Math.round((track.popularity / 20) * 10) / 10, // Convert 0-100 to 0-5 scale with 1 decimal
-		reviewCount: Math.floor(Math.random() * 1000) + 50, // Generate a random review count for demo
+		rating: songRating, // Use real rating from database or "N/A"
+		reviewCount: reviewCount, // Use real review count from database
 		genres: track.artists[0]?.genres || [], // Use first artist's genres
 		album: track.album.name,
 		releaseDate: track.album.release_date,

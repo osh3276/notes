@@ -30,7 +30,7 @@ interface Song {
 	title: string;
 	artist: string;
 	albumArt: string;
-	rating: number;
+	rating: number | string;
 	reviewCount: number;
 	genres: string[];
 	album?: string;
@@ -153,14 +153,58 @@ export function SongDetail({
 	const verifiedReviews = reviews.filter((review) => review.verified);
 	const nonVerifiedReviews = reviews.filter((review) => !review.verified);
 
-	const renderVinyls = (rating: number) => {
+	const renderVinyls = (rating: number | string) => {
+		if (rating === "N/A") {
+			return (
+				<div className="flex items-center space-x-1">
+					{[...Array(5)].map((_, i) => (
+						<VinylRecordIcon
+							key={i}
+							className="w-5 h-5 opacity-30"
+							filled={false}
+						/>
+					))}
+				</div>
+			);
+		}
+		const numRating =
+			typeof rating === "string" ? parseFloat(rating) : rating;
+		return (
+			<div className="flex items-center space-x-1">
+				{[...Array(5)].map((_, i) => (
+					<VinylRecordIcon
+						key={i}
+						className="w-5 h-5"
+						filled={i < numRating}
+					/>
+				))}
+			</div>
+		);
+	};
+
+	const renderSmallVinyls = (rating: number | string) => {
+		if (rating === "N/A") {
+			return (
+				<div className="flex items-center space-x-1">
+					{[...Array(5)].map((_, i) => (
+						<VinylRecordIcon
+							key={i}
+							className="w-4 h-4 opacity-30"
+							filled={false}
+						/>
+					))}
+				</div>
+			);
+		}
+		const numRating =
+			typeof rating === "string" ? parseFloat(rating) : rating;
 		return (
 			<div className="flex items-center space-x-1">
 				{[...Array(5)].map((_, i) => (
 					<VinylRecordIcon
 						key={i}
 						className="w-4 h-4"
-						filled={i < rating}
+						filled={i < numRating}
 					/>
 				))}
 			</div>
@@ -322,14 +366,14 @@ export function SongDetail({
 					</div>
 
 					{/* Song Information */}
-					<div className="lg:col-span-2 space-y-8">
+					<div className="lg:col-span-2 space-y-6">
 						{/* Title and Artist */}
-						<div className="space-y-4">
-							<div>
-								<h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-3 leading-tight">
+						<div>
+							<div className="flex items-center space-x-4 mb-4">
+								<h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
 									{song.title}
 								</h1>
-								<div className="flex items-center space-x-3 mb-4">
+								<div className="flex items-center space-x-2">
 									<span className="text-lg text-muted-foreground">
 										by
 									</span>
@@ -337,59 +381,57 @@ export function SongDetail({
 										onClick={() =>
 											onArtistClick?.(song.artist)
 										}
-										className="flex items-center space-x-3 hover:bg-muted/50 px-3 py-2 rounded-lg transition-all duration-300 group"
+										className="flex items-center justify-center space-x-2 hover:bg-muted/50 px-3 py-2 rounded-lg transition-all duration-300 group"
 									>
-										<div className="w-12 h-12 overflow-hidden rounded-full border-2 border-muted-foreground group-hover:border-accent transition-colors">
+										<div className="w-8 h-8 overflow-hidden rounded-full border-2 border-muted-foreground group-hover:border-accent transition-colors flex items-center justify-center">
 											<img
-												src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=48&h=48&fit=crop&crop=face"
+												src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=32&h=32&fit=crop&crop=face"
 												alt={`${song.artist} headshot`}
 												className="w-full h-full object-cover"
 											/>
 										</div>
-										<span className="text-xl text-accent hover:text-accent/80 transition-colors font-medium">
+										<span className="text-lg text-accent hover:text-accent/80 transition-colors font-medium leading-none">
 											{song.artist}
 										</span>
 									</button>
 								</div>
 							</div>
 
-							{/* Album and Release Info */}
-							{(song.album || song.releaseDate) && (
-								<div className="bg-muted/30 rounded-lg p-4 space-y-2">
-									{song.album && (
-										<div className="flex items-center space-x-2">
-											<span className="text-sm text-muted-foreground">
-												Album:
-											</span>
-											<span className="text-foreground font-medium">
-												{song.album}
-											</span>
-										</div>
-									)}
-									{song.releaseDate && (
-										<div className="flex items-center space-x-2">
-											<span className="text-sm text-muted-foreground">
-												Released:
-											</span>
-											<span className="text-foreground">
-												{new Date(
-													song.releaseDate,
-												).getFullYear()}
-											</span>
-										</div>
-									)}
-									{song.duration && (
-										<div className="flex items-center space-x-2">
-											<span className="text-sm text-muted-foreground">
-												Duration:
-											</span>
-											<span className="text-foreground">
-												{song.duration}
-											</span>
-										</div>
-									)}
-								</div>
-							)}
+							{/* Album, Release, Duration - Horizontal Row */}
+							<div className="flex flex-wrap items-center gap-6 mb-4 text-sm">
+								{song.album && (
+									<div className="flex items-center space-x-2">
+										<span className="text-muted-foreground">
+											Album:
+										</span>
+										<span className="text-foreground font-medium">
+											{song.album}
+										</span>
+									</div>
+								)}
+								{song.releaseDate && (
+									<div className="flex items-center space-x-2">
+										<span className="text-muted-foreground">
+											Released:
+										</span>
+										<span className="text-foreground">
+											{new Date(
+												song.releaseDate,
+											).getFullYear()}
+										</span>
+									</div>
+								)}
+								{song.duration && (
+									<div className="flex items-center space-x-2">
+										<span className="text-muted-foreground">
+											Duration:
+										</span>
+										<span className="text-foreground">
+											{song.duration}
+										</span>
+									</div>
+								)}
+							</div>
 
 							{/* Genre Tags */}
 							{song.genres.length > 0 && (
@@ -412,25 +454,26 @@ export function SongDetail({
 
 						{/* Rating and Stats */}
 						<div className="bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl p-6 border border-muted/30">
-							<h3 className="text-lg font-semibold text-foreground mb-4">
-								Song Statistics
-							</h3>
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								<div className="text-center space-y-2">
 									<div className="flex justify-center mb-2">
-										{renderVinyls(Math.floor(song.rating))}
+										{song.rating === "N/A"
+											? renderVinyls("N/A")
+											: renderVinyls(
+													Math.floor(
+														Number(song.rating),
+													),
+												)}
 									</div>
 									<p className="text-3xl font-bold text-foreground">
 										{song.rating}
 									</p>
-									<p className="text-muted-foreground text-sm font-medium">
+									<p className="text-muted-foreground text-sm">
 										Overall Rating
 									</p>
 								</div>
 								<div className="text-center space-y-2">
-									<div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-2">
-										<MessageSquare className="w-6 h-6 text-accent" />
-									</div>
+									<MessageSquare className="w-6 h-6 text-accent flex items-center justify-center mx-auto mb-2" />
 									<p className="text-3xl font-bold text-foreground">
 										{song.reviewCount.toLocaleString()}
 									</p>
@@ -439,14 +482,12 @@ export function SongDetail({
 									</p>
 								</div>
 								<div className="text-center space-y-2">
-									<div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
-										<TrendingUp className="w-6 h-6 text-green-500" />
-									</div>
+									<Star className="w-6 h-6 text-accent flex items-center justify-center mx-auto mb-2" />
 									<p className="text-3xl font-bold text-foreground">
-										{Math.round(song.rating * 20)}%
+										{song.reviewCount}
 									</p>
 									<p className="text-muted-foreground text-sm font-medium">
-										Popularity Score
+										Total Ratings
 									</p>
 								</div>
 							</div>
