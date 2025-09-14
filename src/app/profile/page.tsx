@@ -76,7 +76,7 @@ export default function ProfilePage() {
 					setUserFavorites(favoritesData.favorites);
 
 					// Fetch song details for each favorite
-					const songDetails = await Promise.all(
+					const songDetails: any = await Promise.all(
 						favoritesData.favorites
 							.slice(0, 10)
 							.map(async (songId: string) => {
@@ -119,7 +119,7 @@ export default function ProfilePage() {
 								};
 							}),
 					);
-					setFavoriteSongs(songDetails as any[]);
+					setFavoriteSongs(songDetails);
 				}
 			} catch (error) {
 				console.error("Error fetching user data:", error);
@@ -282,21 +282,6 @@ export default function ProfilePage() {
 
 								{/* Action Buttons */}
 								<div className="flex items-center space-x-3">
-									{userData.spotifyProfile && (
-										<Button
-											variant="outline"
-											className="border-green-500/50 text-green-400 hover:bg-green-500/10"
-											onClick={() =>
-												window.open(
-													userData.spotifyProfile,
-													"_blank",
-												)
-											}
-										>
-											<ExternalLink className="w-4 h-4 mr-2" />
-											Spotify Profile
-										</Button>
-									)}
 									<Button
 										variant="outline"
 										size="icon"
