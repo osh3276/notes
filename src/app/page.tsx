@@ -59,7 +59,7 @@ export default function App() {
 		return (
 			<div className="min-h-screen bg-[#1A1A1A] dark">
 				<SongDetail
-					song={selectedSong}
+					song={{ ...selectedSong, id: String(selectedSong.id) }}
 					onBack={handleBackToHome}
 					onArtistClick={handleArtistClick}
 					onGenreClick={handleGenreClick}

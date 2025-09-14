@@ -76,46 +76,15 @@ export function SongDetail({
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration] = useState(263); // 4:23 in seconds
-	const [nowPlayingComments, setNowPlayingComments] = useState([
-		{
-			id: 1,
-			user: "MusicLover99",
-			comment: "This drop is INSANE! 🔥",
-			timestamp: 45,
-		},
-		{
-			id: 2,
-			user: "BeatHead2023",
-			comment: "Perfect for my workout playlist",
-			timestamp: 78,
-		},
-		{
-			id: 3,
-			user: "VinylCollector",
-			comment: "The production quality is incredible",
-			timestamp: 120,
-		},
-		{
-			id: 4,
-			user: "IndieKid",
-			comment: "This gives me chills every time",
-			timestamp: 167,
-		},
-		{
-			id: 5,
-			user: "AudioPhile87",
-			comment: "Those harmonies at 3:12 😍",
-			timestamp: 192,
-		},
-	]);
-	const [newComment, setNewComment] = useState("");
 
 	// Fetch reviews from database
 	useEffect(() => {
 		const fetchReviews = async () => {
 			setLoadingReviews(true);
 			try {
-				const response = await fetch(`/api/reviews?song_id=${encodeURIComponent(song.id)}`);
+				const response = await fetch(
+					`/api/reviews?song_id=${encodeURIComponent(song.id)}`,
+				);
 				const data = await response.json();
 
 				if (response.ok && data.reviews) {
@@ -123,16 +92,25 @@ export function SongDetail({
 					const transformedReviews = await Promise.all(
 						data.reviews.map(async (dbReview: any) => {
 							// Fetch user details
-							const userResponse = await fetch(`/api/user?user_id=${encodeURIComponent(dbReview.reviewer_id)}`);
-							const userData = userResponse.ok ? await userResponse.json() : null;
+							const userResponse = await fetch(
+								`/api/user?user_id=${encodeURIComponent(dbReview.reviewer_id)}`,
+							);
+							const userData = userResponse.ok
+								? await userResponse.json()
+								: null;
 
 							// Calculate time ago
-							const timeAgo = getTimeAgo(new Date(dbReview.created_at));
+							const timeAgo = getTimeAgo(
+								new Date(dbReview.created_at),
+							);
 
 							return {
 								id: dbReview.id,
-								userName: userData?.user?.name || "Anonymous User",
-								userAvatar: userData?.user?.image || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+								userName:
+									userData?.user?.name || "Anonymous User",
+								userAvatar:
+									userData?.user?.image ||
+									"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 								rating: dbReview.rating,
 								reviewText: dbReview.review || "",
 								timeAgo,
@@ -140,7 +118,7 @@ export function SongDetail({
 								isLiked: false,
 								verified: dbReview.verified || false,
 							};
-						})
+						}),
 					);
 					setReviews(transformedReviews);
 				}
@@ -157,18 +135,23 @@ export function SongDetail({
 	// Helper function to calculate time ago
 	const getTimeAgo = (date: Date): string => {
 		const now = new Date();
-		const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+		const diffInSeconds = Math.floor(
+			(now.getTime() - date.getTime()) / 1000,
+		);
 
 		if (diffInSeconds < 60) return "just now";
-		if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-		if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-		if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+		if (diffInSeconds < 3600)
+			return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+		if (diffInSeconds < 86400)
+			return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+		if (diffInSeconds < 2592000)
+			return `${Math.floor(diffInSeconds / 86400)} days ago`;
 		return `${Math.floor(diffInSeconds / 2592000)} months ago`;
 	};
 
 	// Separate reviews into verified and community
-	const verifiedReviews = reviews.filter(review => review.verified);
-	const nonVerifiedReviews = reviews.filter(review => !review.verified);
+	const verifiedReviews = reviews.filter((review) => review.verified);
+	const nonVerifiedReviews = reviews.filter((review) => !review.verified);
 
 	const renderVinyls = (rating: number) => {
 		return (
@@ -255,20 +238,31 @@ export function SongDetail({
 				setUserRating(0);
 
 				// Refresh reviews list
-				const reviewsResponse = await fetch(`/api/reviews?song_id=${encodeURIComponent(song.id)}`);
+				const reviewsResponse = await fetch(
+					`/api/reviews?song_id=${encodeURIComponent(song.id)}`,
+				);
 				const reviewsData = await reviewsResponse.json();
 
 				if (reviewsResponse.ok && reviewsData.reviews) {
 					const transformedReviews = await Promise.all(
 						reviewsData.reviews.map(async (dbReview: any) => {
-							const userResponse = await fetch(`/api/user?user_id=${encodeURIComponent(dbReview.reviewer_id)}`);
-							const userData = userResponse.ok ? await userResponse.json() : null;
-							const timeAgo = getTimeAgo(new Date(dbReview.created_at));
+							const userResponse = await fetch(
+								`/api/user?user_id=${encodeURIComponent(dbReview.reviewer_id)}`,
+							);
+							const userData = userResponse.ok
+								? await userResponse.json()
+								: null;
+							const timeAgo = getTimeAgo(
+								new Date(dbReview.created_at),
+							);
 
 							return {
 								id: dbReview.id,
-								userName: userData?.user?.name || "Anonymous User",
-								userAvatar: userData?.user?.image || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+								userName:
+									userData?.user?.name || "Anonymous User",
+								userAvatar:
+									userData?.user?.image ||
+									"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 								rating: dbReview.rating,
 								reviewText: dbReview.review || "",
 								timeAgo,
@@ -276,7 +270,7 @@ export function SongDetail({
 								isLiked: false,
 								verified: dbReview.verified || false,
 							};
-						})
+						}),
 					);
 					setReviews(transformedReviews);
 				}
@@ -704,7 +698,10 @@ export function SongDetail({
 						<div className="text-center py-12">
 							<MessageSquare className="w-16 h-16 text-gray-500 mx-auto mb-4" />
 							<h3 className="text-white mb-2">No reviews yet</h3>
-							<p className="text-gray-400">Be the first to share your thoughts about this track!</p>
+							<p className="text-gray-400">
+								Be the first to share your thoughts about this
+								track!
+							</p>
 						</div>
 					) : (
 						/* Two Column Layout */
@@ -713,7 +710,9 @@ export function SongDetail({
 							<div className="space-y-6">
 								<div className="flex items-center space-x-3 mb-6">
 									<CheckCircle className="w-5 h-5 text-green-400" />
-									<h3 className="text-white">Verified Reviews</h3>
+									<h3 className="text-white">
+										Verified Reviews
+									</h3>
 									<Badge className="bg-green-600/20 text-green-400 border-green-500/30">
 										{verifiedReviews.length} Reviews
 									</Badge>
@@ -722,7 +721,9 @@ export function SongDetail({
 								{verifiedReviews.length === 0 ? (
 									<div className="text-center py-8">
 										<CheckCircle className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-										<p className="text-gray-400">No verified reviews yet</p>
+										<p className="text-gray-400">
+											No verified reviews yet
+										</p>
 									</div>
 								) : (
 									<div className="space-y-4">
@@ -737,25 +738,35 @@ export function SongDetail({
 														<div className="flex items-center space-x-4">
 															<div className="w-12 h-12 rounded-full overflow-hidden border-2 border-green-500/40">
 																<img
-																	src={review.userAvatar}
-																	alt={review.userName}
+																	src={
+																		review.userAvatar
+																	}
+																	alt={
+																		review.userName
+																	}
 																	className="w-full h-full object-cover"
 																/>
 															</div>
 															<div>
 																<div className="flex items-center space-x-2">
 																	<h4 className="text-white font-medium">
-																		{review.userName}
+																		{
+																			review.userName
+																		}
 																	</h4>
 																	<CheckCircle className="w-4 h-4 text-green-400" />
 																</div>
 																<p className="text-gray-400 text-sm">
-																	{review.timeAgo}
+																	{
+																		review.timeAgo
+																	}
 																</p>
 															</div>
 														</div>
 														<div className="flex items-center space-x-1">
-															{renderVinyls(review.rating)}
+															{renderVinyls(
+																review.rating,
+															)}
 														</div>
 													</div>
 
@@ -783,11 +794,17 @@ export function SongDetail({
 																			: ""
 																	}`}
 																/>
-																<span>{review.likes}</span>
+																<span>
+																	{
+																		review.likes
+																	}
+																</span>
 															</button>
 															<button className="flex items-center space-x-1 text-gray-400 hover:text-white text-sm transition-colors">
 																<MessageSquare className="w-4 h-4" />
-																<span>Reply</span>
+																<span>
+																	Reply
+																</span>
 															</button>
 														</div>
 													</div>
@@ -813,7 +830,9 @@ export function SongDetail({
 								{nonVerifiedReviews.length === 0 ? (
 									<div className="text-center py-8">
 										<Users className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-										<p className="text-gray-400">No community reviews yet</p>
+										<p className="text-gray-400">
+											No community reviews yet
+										</p>
 									</div>
 								) : (
 									<div className="space-y-4">
@@ -828,22 +847,32 @@ export function SongDetail({
 														<div className="flex items-center space-x-4">
 															<div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-600">
 																<img
-																	src={review.userAvatar}
-																	alt={review.userName}
+																	src={
+																		review.userAvatar
+																	}
+																	alt={
+																		review.userName
+																	}
 																	className="w-full h-full object-cover"
 																/>
 															</div>
 															<div>
 																<h4 className="text-white font-medium">
-																	{review.userName}
+																	{
+																		review.userName
+																	}
 																</h4>
 																<p className="text-gray-400 text-sm">
-																	{review.timeAgo}
+																	{
+																		review.timeAgo
+																	}
 																</p>
 															</div>
 														</div>
 														<div className="flex items-center space-x-1">
-															{renderVinyls(review.rating)}
+															{renderVinyls(
+																review.rating,
+															)}
 														</div>
 													</div>
 
@@ -871,11 +900,17 @@ export function SongDetail({
 																			: ""
 																	}`}
 																/>
-																<span>{review.likes}</span>
+																<span>
+																	{
+																		review.likes
+																	}
+																</span>
 															</button>
 															<button className="flex items-center space-x-1 text-gray-400 hover:text-white text-sm transition-colors">
 																<MessageSquare className="w-4 h-4" />
-																<span>Reply</span>
+																<span>
+																	Reply
+																</span>
 															</button>
 														</div>
 													</div>

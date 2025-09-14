@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
 	try {
 		// Check if user is authenticated
 		const session = await auth();
-		if (!session?.user?.id) {
+		if (!session?.user?.email) {
 			return NextResponse.json(
 				{ error: "Authentication required" },
 				{ status: 401 },
@@ -55,7 +55,20 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const reviewer_id = session.user.id;
+		// Look up user ID from users table using email
+		const userResult = await sql`
+			SELECT id FROM users
+			WHERE email = ${session.user.email}
+		`;
+
+		if (userResult.length === 0) {
+			return NextResponse.json(
+				{ error: "User not found in database" },
+				{ status: 404 },
+			);
+		}
+
+		const reviewer_id = userResult[0].id;
 
 		// Check if user has already reviewed this song
 		const existingReview = await sql`
@@ -64,19 +77,13 @@ export async function POST(request: NextRequest) {
     `;
 
 		if (existingReview.length > 0) {
-			// Update existing review
-			const result = await sql`
-        UPDATE song_feedback
-        SET rating = ${rating}, review = ${review || null}, created_at = NOW()
-        WHERE song_id = ${song_id} AND reviewer_id = ${reviewer_id}
-        RETURNING id, song_id, reviewer_id, rating, review, verified, created_at
-      `;
-
-			return NextResponse.json({
-				success: true,
-				message: "Review updated successfully",
-				review: result[0],
-			});
+			// User has already reviewed this song - don't allow duplicate
+			return NextResponse.json(
+				{
+					error: "You have already reviewed this song. Only one review per song is allowed.",
+				},
+				{ status: 409 },
+			);
 		} else {
 			// Insert new review
 			const result = await sql`

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { sql } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
 	try {
@@ -13,56 +14,27 @@ export async function GET(request: NextRequest) {
 			);
 		}
 
-		// For now, we'll return mock user data since we don't have a users table
-		// In a real app, you'd fetch from a users table
-		const mockUsers: Record<string, any> = {
-			// Generate some sample users with Spotify-like IDs
-			default: {
-				id: user_id,
-				name: "Music Lover",
-				image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-			},
-		};
+		// Fetch user from the users table
+		const result = await sql`
+			SELECT id, name, email, image
+			FROM users
+			WHERE id = ${user_id}
+		`;
 
-		// Generate a consistent user based on the user_id hash
-		const userHash = user_id.split("").reduce((a, b) => {
-			a = (a << 5) - a + b.charCodeAt(0);
-			return a & a;
-		}, 0);
-
-		const names = [
-			"Alex Johnson",
-			"Sarah Chen",
-			"Mike Rodriguez",
-			"Emma Thompson",
-			"David Kim",
-			"Lisa Wang",
-			"James Wilson",
-			"Maria Garcia",
-			"Ryan O'Connor",
-			"Priya Patel",
-		];
-
-		const avatars = [
-			"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1494790108755-2616c87d8ffe?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-			"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face",
-		];
-
-		const nameIndex = Math.abs(userHash) % names.length;
-		const avatarIndex = Math.abs(userHash) % avatars.length;
+		if (result.length === 0) {
+			return NextResponse.json(
+				{ error: "User not found" },
+				{ status: 404 },
+			);
+		}
 
 		const userData = {
-			id: user_id,
-			name: names[nameIndex],
-			image: avatars[avatarIndex],
+			id: result[0].id,
+			name: result[0].name,
+			email: result[0].email,
+			image:
+				result[0].image ||
+				"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 		};
 
 		return NextResponse.json({
