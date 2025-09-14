@@ -14,7 +14,7 @@ interface Song {
 	title: string;
 	artist: string;
 	albumArt: string;
-	rating: number;
+	rating: number | string;
 	reviewCount: number;
 	genres: string[];
 	spotifyUrl?: string;
