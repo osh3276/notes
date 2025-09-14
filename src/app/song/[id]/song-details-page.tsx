@@ -98,7 +98,7 @@ interface TrackDetails {
 }
 
 interface Song {
-	id: number;
+	id: string;
 	title: string;
 	artist: string;
 	albumArt: string;
@@ -274,7 +274,7 @@ export default function SongDetailsPage() {
 
 	// Convert Spotify track data to Song format expected by SongDetail component
 	const song: Song = {
-		id: parseInt(trackId) || 0, // Convert string ID to number, fallback to 0
+		id: trackId, // Use actual Spotify track ID as string
 		title: track.name,
 		artist: track.artists.map((artist) => artist.name).join(", "),
 		albumArt: track.album.images[0]?.url || "",

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import {
 	ArrowLeft,
 	MessageSquare,
@@ -25,7 +26,7 @@ import { GenreTag } from "./GenreUtils";
 import { Textarea } from "./ui/textarea";
 
 interface Song {
-	id: number;
+	id: string;
 	title: string;
 	artist: string;
 	albumArt: string;
@@ -66,9 +67,12 @@ export function SongDetail({
 	onArtistClick,
 	onGenreClick,
 }: SongDetailProps) {
+	const { data: session, status } = useSession();
 	const [isFavorited, setIsFavorited] = useState(false);
 	const [reviewText, setReviewText] = useState("");
 	const [userRating, setUserRating] = useState(0);
+	const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+	const [reviewSubmissionMessage, setReviewSubmissionMessage] = useState("");
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration] = useState(263); // 4:23 in seconds
@@ -116,8 +120,10 @@ export function SongDetail({
 	]);
 	const [newComment, setNewComment] = useState("");
 
-	// Function to generate critic reviews based on song ID
-	const getCriticReviews = (songId: number): Review[] => {
+	// Function to get mock critic reviews based on song ID
+	const getCriticReviews = (songId: string): Review[] => {
+		// Convert string ID to numeric for mock data lookup
+		const numericId = parseInt(songId) || 1;
 		const criticDatabase: Record<number, Review[]> = {
 			// Song 1: 4 reviews
 			1: [
@@ -464,13 +470,15 @@ export function SongDetail({
 			],
 		};
 
-		return criticDatabase[songId] || criticDatabase[1];
+		return criticDatabase[numericId] || criticDatabase[1];
 	};
 
 	const criticReviews = getCriticReviews(song.id);
 
 	// Function to generate community reviews based on song ID
-	const getCommunityReviews = (songId: number): Review[] => {
+	const getCommunityReviews = (songId: string): Review[] => {
+		// Convert string ID to numeric for mock data lookup
+		const numericId = parseInt(songId) || 1;
 		const communityDatabase: Record<number, Review[]> = {
 			// Song 1: 6 reviews
 			1: [
@@ -1013,13 +1021,15 @@ export function SongDetail({
 			],
 		};
 
-		return communityDatabase[songId] || communityDatabase[1];
+		return communityDatabase[numericId] || communityDatabase[1];
 	};
 
 	const communityReviews = getCommunityReviews(song.id);
 
 	// Function to generate AI summary based on song ID
-	const getAISummary = (songId: number) => {
+	const getAISummary = (songId: string) => {
+		// Convert string ID to numeric for mock data lookup
+		const numericId = parseInt(songId) || 1;
 		const aiSummaryDatabase: Record<
 			number,
 			{
@@ -1217,7 +1227,7 @@ export function SongDetail({
 			},
 		};
 
-		return aiSummaryDatabase[songId] || aiSummaryDatabase[1];
+		return aiSummaryDatabase[numericId] || aiSummaryDatabase[1];
 	};
 
 	const aiSummary = getAISummary(song.id);
@@ -1306,6 +1316,57 @@ export function SongDetail({
 		const mins = Math.floor(seconds / 60);
 		const secs = Math.floor(seconds % 60);
 		return `${mins}:${secs.toString().padStart(2, "0")}`;
+	};
+
+	const handleSubmitReview = async () => {
+		if (!session?.user?.id) {
+			setReviewSubmissionMessage("Please sign in to post a review");
+			return;
+		}
+
+		if (userRating === 0) {
+			setReviewSubmissionMessage("Please select a rating");
+			return;
+		}
+
+		setIsSubmittingReview(true);
+		setReviewSubmissionMessage("");
+
+		try {
+			const response = await fetch("/api/reviews", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					song_id: song.id,
+					rating: userRating,
+					review: reviewText.trim() || null,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				setReviewSubmissionMessage(
+					data.message || "Review posted successfully!",
+				);
+				setReviewText("");
+				setUserRating(0);
+				// Optionally refresh the page or update reviews list
+			} else {
+				setReviewSubmissionMessage(
+					data.error || "Failed to post review",
+				);
+			}
+		} catch (error) {
+			console.error("Error posting review:", error);
+			setReviewSubmissionMessage(
+				"Failed to post review. Please try again.",
+			);
+		} finally {
+			setIsSubmittingReview(false);
+		}
 	};
 
 	return (
@@ -1492,75 +1553,142 @@ export function SongDetail({
 					{/* Write Review Section */}
 					<Card className="bg-gray-800/40 border-gray-700/50">
 						<CardContent className="p-6">
-							<div className="space-y-4">
-								<Textarea
-									value={reviewText}
-									onChange={(e) =>
-										setReviewText(e.target.value)
-									}
-									placeholder="Share your thoughts about this track... What did you love? What could be improved?"
-									className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 resize-none min-h-[120px] focus:border-purple-500 focus:ring-purple-500/20"
-								/>
+							{status === "loading" ? (
+								<div className="text-center py-4">
+									<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-500 mx-auto mb-2"></div>
+									<p className="text-gray-400">Loading...</p>
+								</div>
+							) : !session ? (
+								<div className="text-center py-6">
+									<h3 className="text-white mb-2">
+										Sign in to write a review
+									</h3>
+									<p className="text-gray-400 mb-4">
+										Share your thoughts about this track
+										with the community
+									</p>
+									<Button
+										onClick={() =>
+											(window.location.href =
+												"/api/auth/signin")
+										}
+										className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+									>
+										Sign In with Spotify
+									</Button>
+								</div>
+							) : (
+								<div className="space-y-4">
+									<Textarea
+										value={reviewText}
+										onChange={(e) =>
+											setReviewText(e.target.value)
+										}
+										placeholder="Share your thoughts about this track... What did you love? What could be improved?"
+										className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 resize-none min-h-[120px] focus:border-purple-500 focus:ring-purple-500/20"
+									/>
 
-								<div className="flex items-center justify-between">
-									<div className="flex items-center space-x-4">
-										<span className="text-gray-400 text-sm">
-											{reviewText.length}/500 characters
-										</span>
-										{reviewText.length > 400 && (
-											<span className="text-orange-400 text-sm">
-												Character limit approaching
+									{/* Rating Section - Above text area */}
+									<div className="flex flex-col items-center space-y-3 p-4 bg-gray-700/30 rounded-lg">
+										<div className="flex items-center space-x-2">
+											<span className="text-gray-300 text-sm">
+												Rate this track:
 											</span>
-										)}
-									</div>
-
-									<div className="flex items-center space-x-2">
-										<Button
-											variant="outline"
-											size="sm"
-											className="border-gray-600 text-gray-300 hover:bg-gray-700"
-											onClick={() => {
-												setReviewText("");
-												setUserRating(0);
-											}}
-										>
-											Clear
-										</Button>
-										<Button
-											size="sm"
-											disabled={
-												!reviewText.trim() ||
-												userRating === 0
-											}
-											className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-										>
-											Post Review
-										</Button>
-									</div>
-								</div>
-
-								{/* Rating Section - Centered */}
-								<div className="flex justify-center mt-4 pt-4 border-t border-gray-600/50">
-									<div className="flex items-center space-x-1">
-										{[1, 2, 3, 4, 5].map((rating) => (
-											<button
-												key={rating}
-												onClick={() =>
-													setUserRating(rating)
-												}
-												className="p-1 hover:scale-110 transition-transform"
-											>
-												<VinylRecordIcon
-													className="w-6 h-6"
-													filled={
-														rating <= userRating
+											<span className="text-purple-400 font-medium">
+												{userRating > 0
+													? `${userRating}/5`
+													: "Select rating"}
+											</span>
+										</div>
+										<div className="flex items-center space-x-1">
+											{[1, 2, 3, 4, 5].map((rating) => (
+												<button
+													key={rating}
+													onClick={() =>
+														setUserRating(rating)
 													}
-												/>
-											</button>
-										))}
+													className="p-1 hover:scale-110 transition-transform"
+												>
+													<VinylRecordIcon
+														className="w-8 h-8"
+														filled={
+															rating <= userRating
+														}
+													/>
+												</button>
+											))}
+										</div>
 									</div>
+
+									<div className="flex items-center justify-between">
+										<div className="flex items-center space-x-4">
+											<span className="text-gray-400 text-sm">
+												{reviewText.length}/1000
+												characters
+											</span>
+											{reviewText.length > 800 && (
+												<span className="text-orange-400 text-sm">
+													Character limit approaching
+												</span>
+											)}
+										</div>
+
+										<div className="flex items-center space-x-2">
+											<Button
+												variant="outline"
+												size="sm"
+												className="border-gray-600 text-gray-300 hover:bg-gray-700"
+												onClick={() => {
+													setReviewText("");
+													setUserRating(0);
+													setReviewSubmissionMessage(
+														"",
+													);
+												}}
+												disabled={isSubmittingReview}
+											>
+												Clear
+											</Button>
+											<Button
+												size="sm"
+												disabled={
+													userRating === 0 ||
+													isSubmittingReview
+												}
+												className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+												onClick={handleSubmitReview}
+											>
+												{isSubmittingReview ? (
+													<>
+														<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+														Posting...
+													</>
+												) : (
+													"Post Review"
+												)}
+											</Button>
+										</div>
+									</div>
+
+									{/* Success/Error Message */}
+									{reviewSubmissionMessage && (
+										<div
+											className={`p-3 rounded-lg text-sm ${
+												reviewSubmissionMessage.includes(
+													"success",
+												) ||
+												reviewSubmissionMessage.includes(
+													"posted",
+												)
+													? "bg-green-900/30 text-green-400 border border-green-500/30"
+													: "bg-red-900/30 text-red-400 border border-red-500/30"
+											}`}
+										>
+											{reviewSubmissionMessage}
+										</div>
+									)}
 								</div>
-							</div>
+							)}
 						</CardContent>
 					</Card>
 
