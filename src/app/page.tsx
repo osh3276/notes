@@ -79,7 +79,6 @@ export default function App() {
 			</div>
 		);
 	}
-
 	if (currentPage === "genre" && selectedGenre) {
 		return (
 			<div className="min-h-screen bg-[#1A1A1A] dark">
