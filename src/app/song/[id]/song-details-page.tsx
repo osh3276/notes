@@ -108,6 +108,7 @@ interface Song {
 	releaseDate?: string;
 	duration?: string;
 	spotifyUrl?: string;
+	aiSummary?: string;
 }
 
 export default function SongDetailsPage() {
@@ -116,6 +117,7 @@ export default function SongDetailsPage() {
 	const [track, setTrack] = useState<TrackDetails | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [aiSummary, setAiSummary] = useState<string | null>(null);
 
 	const trackId = params.id as string;
 
@@ -137,6 +139,16 @@ export default function SongDetailsPage() {
 				}
 
 				setTrack(data);
+				
+				// Fetch AI summary after getting track details
+				try {
+					const summaryResponse = await fetch(`/api/song-reviews-summary/${trackId}`);
+					const summaryData = await summaryResponse.json();
+					setAiSummary(summaryData.summary);
+				} catch (summaryErr) {
+					console.error('Error fetching AI summary:', summaryErr);
+					setAiSummary(null);
+				}
 			} catch (err) {
 				setError(
 					err instanceof Error ? err.message : "An error occurred",
@@ -245,6 +257,7 @@ export default function SongDetailsPage() {
 		releaseDate: track.album.release_date,
 		duration: formatDuration(track.duration_ms),
 		spotifyUrl: track.external_urls.spotify,
+		aiSummary: aiSummary || 'AI Review Summary is not available for this song',
 	};
 
 	return (
