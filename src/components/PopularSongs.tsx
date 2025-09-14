@@ -200,10 +200,10 @@ export function PopularSongs({
 
 	if (loading) {
 		return (
-			<section className="py-12 px-4 bg-background/40">
+			<section className="py-12 px-4 bg-[#1A1A1A]/40">
 				<div className="container mx-auto">
 					<div className="mb-8">
-						<h2 className="text-3xl text-foreground mb-2">
+						<h2 className="text-6xl text-foreground mb-2">
 							New Releases
 						</h2>
 						<p className="text-muted-foreground">
@@ -220,10 +220,10 @@ export function PopularSongs({
 
 	if (error) {
 		return (
-			<section className="py-12 px-4 bg-background/40">
+			<section className="py-12 px-4 bg-[#1A1A1A]/40">
 				<div className="container mx-auto">
 					<div className="mb-8">
-						<h2 className="text-3xl text-foreground mb-2">
+						<h2 className="text-6xl text-foreground mb-2">
 							New Releases
 						</h2>
 						<p className="text-muted-foreground">
@@ -242,9 +242,9 @@ export function PopularSongs({
 
 	if (newReleases.length === 0) {
 		return (
-			<section className="py-12 px-4 bg-background/40">
+			<section className="py-12 px-4 bg-[#1A1A1A]/40">
 				<div className="container mx-auto">
-					<div className="mb-8">
+					<div className="mb-12">
 						<h2 className="text-3xl text-foreground mb-2">
 							New Releases
 						</h2>
@@ -263,13 +263,13 @@ export function PopularSongs({
 	}
 
 	return (
-		<section className="py-12 px-4 bg-background/40">
+		<section className="py-12 px-4">
 			<div className="container mx-auto">
 				<div className="mb-8">
-					<h2 className="text-3xl text-foreground mb-2">
+					<h2 className="text-6xl font-bold text-foreground mb-2">
 						New Releases
 					</h2>
-					<p className="text-muted-foreground">
+					<p className="text-xl text-muted-foreground">
 						Latest releases from Spotify
 					</p>
 				</div>
