@@ -1,6 +1,13 @@
-import { Search, Menu, LogIn, LogOut, User, Loader2 } from "lucide-react";
+import {
+	ArrowLeft,
+	Search,
+	User,
+	Menu,
+	LogIn,
+	LogOut,
+	Loader2,
+} from "lucide-react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,8 +17,8 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useState, useRef, useEffect } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useRouter } from "next/navigation";
+import { useState, useRef } from "react";
 
 interface Track {
 	id: string;
@@ -31,13 +38,19 @@ interface Track {
 	};
 }
 
-interface HeaderProps {
+interface MiniHeaderProps {
+	onBack?: () => void;
 	onProfileClick?: () => void;
 	onSongSelect?: (songId: string) => void;
 }
 
-export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
+export function MiniHeader({
+	onBack,
+	onProfileClick,
+	onSongSelect,
+}: MiniHeaderProps) {
 	const { data: session, status } = useSession();
+	const router = useRouter();
 	const [query, setQuery] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 	const [searchResults, setSearchResults] = useState<Track[]>([]);
@@ -51,6 +64,18 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 
 	const handleSignOut = () => {
 		signOut();
+	};
+
+	const handleBack = () => {
+		if (onBack) {
+			onBack();
+		} else {
+			router.back();
+		}
+	};
+
+	const handleLogoClick = () => {
+		router.push("/");
 	};
 
 	const handleSearch = async () => {
@@ -94,47 +119,55 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 				}}
 			/>
 
-			<header
-				className="w-full relative"
-				style={{
-					background:
-						"linear-gradient(to bottom, #302c20, transparent)",
-				}}
-			>
+			<header className="w-full bg-[#1A1A1A] border-b border-white/10 relative">
 				<div
-					className={`relative z-10 container mx-auto px-0 py-4 flex items-center justify-between transition-all duration-300 ${isSearchActive ? "z-50" : ""}`}
+					className={`container mx-auto px-4 py-3 flex items-center justify-between transition-all duration-300 ${isSearchActive ? "z-50" : ""}`}
 				>
-					{/* Logo */}
-					<div className="flex items-center">
-						<img
-							src="logo.png"
-							alt="Notes"
-							className="h-36 w-auto"
-						/>
+					{/* Left side - Back button and Logo */}
+					<div className="flex items-center space-x-4">
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={handleBack}
+							className="text-white hover:bg-white/10"
+						>
+							<ArrowLeft className="w-5 h-5" />
+						</Button>
+
+						<div
+							className="flex items-center cursor-pointer"
+							onClick={handleLogoClick}
+						>
+							<img
+								src="/logo.png"
+								alt="Notes"
+								className="h-12 w-auto"
+							/>
+						</div>
 					</div>
 
-					{/* Custom Search Bar */}
-					<div className="flex-1 max-w-2xl mx-8 relative">
+					{/* Center - Search Bar */}
+					<div className="flex-1 max-w-lg mx-8 relative">
 						<div className="relative">
 							{/* Magnifying glass icon */}
-							<div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10">
+							<div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-100">
 								{isSearching ? (
-									<Loader2 className="w-5 h-5 text-gray-300 animate-spin" />
+									<Loader2 className="w-4 h-4 text-gray-300 animate-spin" />
 								) : (
-									<Search className="w-5 h-5 text-gray-300" />
+									<Search className="w-4 h-4 text-gray-300" />
 								)}
 							</div>
 
 							{/* Search text/input area */}
 							<div
-								className="relative cursor-text py-3 pl-8"
+								className="relative cursor-text py-2 pl-6 z-100"
 								onClick={() => {
 									setIsSearchActive(true);
 									searchInputRef.current?.focus();
 								}}
 							>
 								{!isSearchActive && !query ? (
-									<span className="text-gray-300 text-lg">
+									<span className="text-gray-300 text-sm">
 										Search songs...
 									</span>
 								) : (
@@ -160,7 +193,7 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 												}
 											}, 150);
 										}}
-										className="bg-transparent text-white text-lg outline-none border-none w-full placeholder-gray-300"
+										className="bg-transparent text-white text-sm outline-none border-none w-full placeholder-gray-300"
 										placeholder="Search songs..."
 										autoFocus={isSearchActive}
 									/>
@@ -181,7 +214,7 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 						{showResults && isSearchActive && (
 							<div className="absolute top-full left-0 right-0 mt-2 bg-black/95 backdrop-blur-lg border border-white/20 rounded-lg shadow-2xl z-50">
 								{searchResults.length > 0 ? (
-									<div className="max-h-[400px] overflow-auto">
+									<div className="max-h-[300px] overflow-auto">
 										{searchResults.map((track) => (
 											<div
 												key={track.id}
@@ -189,12 +222,14 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 												onClick={() => {
 													if (onSongSelect) {
 														onSongSelect(track.id);
-														setShowResults(false);
-														setIsSearchActive(
-															false,
+													} else {
+														router.push(
+															`/song/${track.id}`,
 														);
-														setQuery("");
 													}
+													setShowResults(false);
+													setIsSearchActive(false);
+													setQuery("");
 												}}
 											>
 												{track.album.images[0] && (
@@ -204,14 +239,14 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 																.images[0].url
 														}
 														alt={track.album.name}
-														className="w-12 h-12 rounded object-cover"
+														className="w-10 h-10 rounded object-cover"
 													/>
 												)}
 												<div className="flex-1 min-w-0">
-													<p className="text-white font-medium truncate">
+													<p className="text-white font-medium truncate text-sm">
 														{track.name}
 													</p>
-													<p className="text-gray-400 text-sm truncate">
+													<p className="text-gray-400 text-xs truncate">
 														{track.artists
 															.map((a) => a.name)
 															.join(", ")}
@@ -221,7 +256,7 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 										))}
 									</div>
 								) : query && !isSearching ? (
-									<div className="p-4 text-gray-400 text-center">
+									<div className="p-4 text-gray-400 text-center text-sm">
 										No results found
 									</div>
 								) : null}
@@ -229,7 +264,7 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 						)}
 					</div>
 
-					{/* Profile Picture and Menu */}
+					{/* Right side - Profile */}
 					<div className="flex items-center space-x-3">
 						{/* Profile/Login Dropdown */}
 						<DropdownMenu>
@@ -323,9 +358,11 @@ export function Header({ onProfileClick, onSongSelect }: HeaderProps) {
 							>
 								<DropdownMenuLabel>Menu</DropdownMenuLabel>
 								<DropdownMenuSeparator />
-								<DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={() => router.push("/")}
+								>
 									<Search className="mr-2 h-4 w-4" />
-									Advanced Search
+									Search Songs
 								</DropdownMenuItem>
 								<DropdownMenuItem>
 									Trending Artists

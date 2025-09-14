@@ -1,97 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	--background: #1a1a1a;
+	--foreground: #ededed;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	:root {
+		--background: #1a1a1a;
+		--foreground: #ededed;
+	}
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-secondary), sans-serif;
-  font-weight: 400;
+	background: var(--background);
+	color: var(--foreground);
+	font-family: var(--font-secondary), sans-serif;
+	font-weight: 400;
 }
 
-h1, h2, h3, h4, h5, h6, .primary-font {
-  font-family: var(--font-primary), sans-serif;
-  font-weight: 600;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.primary-font {
+	font-family: var(--font-primary), sans-serif;
+	font-weight: 600;
 }
 
 .narrow-text {
-  font-family: var(--font-primary), sans-serif;
-  font-weight: 400;
+	font-family: var(--font-primary), sans-serif;
+	font-weight: 400;
 }
 
 .regular-text {
-  font-family: var(--font-secondary), sans-serif;
-  font-weight: 400;
+	font-family: var(--font-secondary), sans-serif;
+	font-weight: 400;
 }
 
 /* Prevent hydration flash */
 html {
-  color-scheme: dark;
+	color-scheme: dark;
 }
 
 /* Hide content until hydration is complete to prevent flash */
 .hydrating {
-  visibility: hidden;
+	visibility: hidden;
 }
 
 .hydrated {
-  visibility: visible;
+	visibility: visible;
 }
 
 /* Custom scrollbar styles for smooth horizontal scrolling */
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  scroll-behavior: auto;
-  will-change: scroll-position;
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+	scroll-behavior: auto;
+	will-change: scroll-position;
 }
 
 /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+	display: none;
+	width: 0;
+	height: 0;
 }
 
 .scrollbar-hide::-webkit-scrollbar-track {
-  background: transparent;
+	background: transparent;
 }
 
 .scrollbar-hide::-webkit-scrollbar-thumb {
-  background: transparent;
+	background: transparent;
 }
 
 /* Additional styles for better UI components */
 :root {
-  --border-radius: 0.5rem;
+	--border-radius: 0.5rem;
 }
 
 .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .5;
-  }
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
 }

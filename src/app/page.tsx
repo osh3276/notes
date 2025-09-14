@@ -4,9 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { PopularSongs } from "@/components/PopularSongs";
-import { PopularReviews } from "@/components/PopularReviews";
+import { RecentReviews } from "@/components/RecentReviews";
 import { SongDetail } from "@/components/SongDetail";
-import { UserProfile } from "@/components/UserProfile";
 import { ArtistProfile } from "@/components/ArtistProfile";
 import { GenrePage } from "@/components/GenrePage";
 
@@ -24,7 +23,7 @@ interface Song {
 export default function App() {
 	const router = useRouter();
 	const [currentPage, setCurrentPage] = useState<
-		"home" | "song" | "profile" | "artist" | "genre"
+		"home" | "song" | "artist" | "genre"
 	>("home");
 	const [selectedSong, setSelectedSong] = useState<Song | null>(null);
 	const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
@@ -43,7 +42,7 @@ export default function App() {
 	};
 
 	const handleProfileClick = () => {
-		setCurrentPage("profile");
+		router.push("/profile");
 	};
 
 	const handleArtistClick = (artistName: string) => {
@@ -58,7 +57,7 @@ export default function App() {
 
 	if (currentPage === "song" && selectedSong) {
 		return (
-			<div className="min-h-screen bg-background dark">
+			<div className="min-h-screen bg-[#1A1A1A] dark">
 				<SongDetail
 					song={selectedSong}
 					onBack={handleBackToHome}
@@ -69,17 +68,9 @@ export default function App() {
 		);
 	}
 
-	if (currentPage === "profile") {
-		return (
-			<div className="min-h-screen bg-background dark">
-				<UserProfile onBack={handleBackToHome} />
-			</div>
-		);
-	}
-
 	if (currentPage === "artist" && selectedArtist) {
 		return (
-			<div className="min-h-screen bg-background dark">
+			<div className="min-h-screen bg-[#1A1A1A] dark">
 				<ArtistProfile
 					artistName={selectedArtist}
 					onBack={handleBackToHome}
@@ -91,7 +82,7 @@ export default function App() {
 
 	if (currentPage === "genre" && selectedGenre) {
 		return (
-			<div className="min-h-screen bg-background dark">
+			<div className="min-h-screen bg-[#1A1A1A] dark">
 				<GenrePage
 					genre={selectedGenre}
 					onBack={handleBackToHome}
@@ -107,7 +98,7 @@ export default function App() {
 	};
 
 	return (
-		<div className="min-h-screen bg-black dark">
+		<div className="min-h-screen bg-[#1A1A1A] dark">
 			<Header
 				onProfileClick={handleProfileClick}
 				onSongSelect={handleSearchSongSelect}
@@ -117,7 +108,7 @@ export default function App() {
 					onSongSelect={handleSongSelect}
 					onGenreClick={handleGenreClick}
 				/>
-				<PopularReviews />
+				<RecentReviews />
 			</main>
 		</div>
 	);

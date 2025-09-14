@@ -16,7 +16,7 @@ interface Review {
 	likes: number;
 }
 
-export function PopularReviews() {
+export function RecentReviews() {
 	const popularReviews: Review[] = [
 		{
 			id: 1,
@@ -80,7 +80,7 @@ export function PopularReviews() {
 	};
 
 	return (
-		<section className="py-16 px-4 bg-background/20">
+		<section className="py-16 px-4">
 			<div className="container mx-auto max-w-7xl">
 				<div className="mb-12 text-center">
 					<h2 className="text-foreground mb-2">Recent Reviews</h2>
