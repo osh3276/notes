@@ -67,6 +67,7 @@ export function SongDetail({
 }: SongDetailProps) {
 	const { data: session, status } = useSession();
 	const [isFavorited, setIsFavorited] = useState(false);
+	const [isUpdatingFavorites, setIsUpdatingFavorites] = useState(false);
 	const [reviewText, setReviewText] = useState("");
 	const [userRating, setUserRating] = useState(0);
 	const [isSubmittingReview, setIsSubmittingReview] = useState(false);
@@ -76,6 +77,64 @@ export function SongDetail({
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration] = useState(263); // 4:23 in seconds
+
+	// Check if song is in user's favorites
+	useEffect(() => {
+		const checkFavoriteStatus = async () => {
+			if (!session?.user?.email) return;
+
+			try {
+				const response = await fetch("/api/favorites");
+				const data = await response.json();
+
+				if (response.ok && data.favorites) {
+					setIsFavorited(data.favorites.includes(song.id));
+				}
+			} catch (error) {
+				console.error("Error checking favorite status:", error);
+			}
+		};
+
+		checkFavoriteStatus();
+	}, [song.id, session]);
+
+	// Handle favorites toggle
+	const handleFavoritesToggle = async () => {
+		if (!session?.user?.email) {
+			alert("Please log in to add favorites");
+			return;
+		}
+
+		setIsUpdatingFavorites(true);
+
+		try {
+			const action = isFavorited ? "remove" : "add";
+			const response = await fetch("/api/favorites", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					song_id: song.id,
+					action: action,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				setIsFavorited(!isFavorited);
+			} else {
+				console.error("Failed to update favorites:", data.error);
+				alert(data.error || "Failed to update favorites");
+			}
+		} catch (error) {
+			console.error("Error updating favorites:", error);
+			alert("Failed to update favorites");
+		} finally {
+			setIsUpdatingFavorites(false);
+		}
+	};
 
 	// Fetch reviews from database
 	useEffect(() => {
@@ -114,7 +173,7 @@ export function SongDetail({
 								rating: dbReview.rating,
 								reviewText: dbReview.review || "",
 								timeAgo,
-								likes: Math.floor(Math.random() * 100), // Mock likes for now
+								likes: 0, // Mock likes for now
 								isLiked: false,
 								verified: dbReview.verified || false,
 							};
@@ -496,19 +555,24 @@ export function SongDetail({
 						{/* Action Buttons */}
 						<div className="flex flex-wrap gap-4">
 							<Button
-								onClick={() => setIsFavorited(!isFavorited)}
+								onClick={handleFavoritesToggle}
+								disabled={isUpdatingFavorites}
 								variant="outline"
 								size="lg"
 								className={`border-border hover:bg-muted transition-all duration-300 ${
 									isFavorited
 										? "bg-accent border-accent text-accent-foreground"
 										: "text-muted-foreground hover:text-foreground"
-								}`}
+								} ${isUpdatingFavorites ? "opacity-50 cursor-not-allowed" : ""}`}
 							>
 								<Heart
 									className={`w-5 h-5 mr-2 ${isFavorited ? "fill-current" : ""}`}
 								/>
-								{isFavorited ? "Favorited" : "Add to Favorites"}
+								{isUpdatingFavorites
+									? "Updating..."
+									: isFavorited
+										? "Favorited"
+										: "Add to Favorites"}
 							</Button>
 							<Button
 								variant="outline"
