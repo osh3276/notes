@@ -36,6 +36,7 @@ interface Song {
 	releaseDate?: string;
 	duration?: string;
 	spotifyUrl?: string;
+	aiSummary?: string;
 }
 
 interface Review {
@@ -1446,68 +1447,16 @@ export function SongDetail({
 							</div>
 
 							<div className="space-y-4">
-								{/* Overall Sentiment */}
 								<div className="bg-muted/50 p-4 border border-accent/20">
 									<div className="flex items-center space-x-2 mb-3">
-										<TrendingUp className="w-4 h-4 text-accent" />
+										<Sparkles className="w-4 h-4 text-accent" />
 										<span className="text-accent">
-											Overall Sentiment: {aiSummary.sentiment}
+											AI Generated Review Summary
 										</span>
 									</div>
-									<p className="text-muted-foreground leading-relaxed">
-										{aiSummary.description}
+									<p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+										{song.aiSummary}
 									</p>
-								</div>
-
-								{/* Key Themes */}
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-									{aiSummary.themes.map((theme, index) => (
-										<div key={index} className="bg-muted/50 p-4 border border-accent/20">
-											<div className="flex items-center space-x-2 mb-2">
-												<div className={`w-2 h-2 bg-${theme.color}-400 rounded-full`}></div>
-												<span className={`text-${theme.color}-300`}>
-													{theme.title}
-												</span>
-											</div>
-											<p className="text-muted-foreground text-sm">
-												{theme.description}
-											</p>
-										</div>
-									))}
-								</div>
-
-								{/* Quick Stats */}
-								<div className="flex items-center justify-between pt-4 border-t border-purple-500/20">
-									<div className="flex items-center space-x-6">
-										<div className="flex items-center space-x-2">
-											<CheckCircle className="w-4 h-4 text-green-400" />
-											<span className="text-gray-300 text-sm">
-												{criticReviews.length} Critic Reviews
-											</span>
-										</div>
-										<div className="flex items-center space-x-2">
-											<Users className="w-4 h-4 text-purple-400" />
-											<span className="text-gray-300 text-sm">
-												{communityReviews.length} Community Reviews
-											</span>
-										</div>
-										<div className="flex items-center space-x-2">
-											<VinylRecordIcon
-												className="w-4 h-4"
-												filled={true}
-											/>
-											<span className="text-gray-300 text-sm">
-												Avg. {aiSummary.avgRating}
-											</span>
-										</div>
-									</div>
-									<Button
-										variant="outline"
-										size="sm"
-										className="border-purple-500/50 text-purple-300 hover:bg-purple-800/20"
-									>
-										View Analysis Details
-									</Button>
 								</div>
 							</div>
 						</CardContent>
